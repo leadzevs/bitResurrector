@@ -1,0 +1,754 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>bitResurrector v3.0 | The Industrial-Grade Suite for Digital Archaeology</title>
+
+    <!-- SEO & Advanced Meta -->
+    <meta name="description"
+        content="Official technical overview of bitResurrector v3.0 and the Sniper Engine. Advanced Bitcoin key recovery suite utilizing AVX-512, Montgomery REDC, and a 9-tier entropy filtration sieve to reclaim abandoned digital assets.">
+    <meta name="keywords"
+        content="bitResurrector, Sniper Engine v3.37, Bitcoin key recovery, Digital Archaeology, Montgomery REDC, AVX-512 Bit-Slicing, CUDA, Bloom Filter, Shannon Entropy, NIST SP 800-22, bitResurrector download">
+    <link rel="canonical" href="https://bitresurrector.vercel.app" />
+
+    <!-- Fonts: Outfit (Brand), Inter (Readability), Fira Code (Monospace) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800;900&family=Inter:wght@300;400;500;700&family=Fira+Code:wght@400;500&display=swap"
+        rel="stylesheet">
+
+    <!-- Styles: Premium Dark-Mode Technical Aesthetic -->
+    <style>
+        :root {
+            --bg-obsidian: #050505;
+            --bg-surface: rgba(18, 18, 18, 0.7);
+            --primary-emerald: #10b981;
+            --primary-glow: rgba(16, 185, 129, 0.3);
+            --secondary-cyan: #06b6d4;
+            --accent-crimson: #ef4444;
+            --text-primary: #f8fafc;
+            --text-secondary: #94a3b8;
+            --border-muted: rgba(255, 255, 255, 0.08);
+            --glass-blur: blur(12px);
+        }
+
+        * {
+            box-sizing: border-box;
+            scroll-behavior: smooth;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: var(--bg-obsidian);
+            color: var(--text-primary);
+            font-family: 'Inter', sans-serif;
+            line-height: 1.7;
+            overflow-x: hidden;
+        }
+
+        /* --- Custom Scrollbar --- */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--bg-obsidian);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #222;
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--primary-emerald);
+        }
+
+        /* --- Typography & Headers --- */
+        h1,
+        h2,
+        h3,
+        h4 {
+            font-family: 'Outfit', sans-serif;
+            font-weight: 800;
+            margin: 0;
+            letter-spacing: -0.02em;
+        }
+
+        .gradient-text {
+            background: linear-gradient(135deg, var(--primary-emerald), var(--secondary-cyan));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        /* --- Layout Structure --- */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 40px;
+        }
+
+        section {
+            padding: 120px 0;
+            border-bottom: 1px solid var(--border-muted);
+        }
+
+        /* --- Header/Nav --- */
+        nav {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 1000;
+            background: rgba(5, 5, 5, 0.8);
+            backdrop-filter: var(--glass-blur);
+            border-bottom: 1px solid var(--border-muted);
+            padding: 20px 0;
+        }
+
+        .nav-inner {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 900;
+            color: #fff;
+            text-transform: uppercase;
+        }
+
+        .logo span {
+            color: var(--primary-emerald);
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 30px;
+        }
+
+        .nav-links a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 0.9rem;
+            font-weight: 600;
+            transition: color 0.3s;
+        }
+
+        .nav-links a:hover {
+            color: var(--primary-emerald);
+        }
+
+        /* --- Hero Section --- */
+        .hero {
+            position: relative;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            background: radial-gradient(circle at center, rgba(16, 185, 129, 0.1) 0%, transparent 70%);
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('https://ai-seedfinder.com/wp-content/uploads/interface.png') no-repeat center center;
+            background-size: cover;
+            opacity: 0.1;
+            z-index: -1;
+            filter: sepia(100%) hue-rotate(100deg);
+        }
+
+        .hero-title {
+            font-size: clamp(3rem, 10vw, 6rem);
+            line-height: 0.95;
+            margin-bottom: 20px;
+        }
+
+        .hero-desc {
+            font-size: 1.3rem;
+            color: var(--text-secondary);
+            max-width: 800px;
+            margin: 0 auto 50px;
+        }
+
+        /* --- Buttons --- */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            padding: 20px 40px;
+            border-radius: 12px;
+            font-weight: 800;
+            text-decoration: none;
+            font-family: 'Outfit', sans-serif;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            transition: all 0.3s;
+        }
+
+        .btn-primary {
+            background: var(--primary-emerald);
+            color: #000;
+            box-shadow: 0 10px 40px var(--primary-glow);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-3px) scale(1.02);
+            box-shadow: 0 20px 60px var(--primary-glow);
+        }
+
+        .btn-outline {
+            border: 2px solid var(--border-muted);
+            color: #fff;
+            margin-left: 15px;
+        }
+
+        .btn-outline:hover {
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        /* --- Feature Cards & Grids --- */
+        .grid-3 {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 40px;
+        }
+
+        .glass-card {
+            background: var(--bg-surface);
+            border: 1px solid var(--border-muted);
+            padding: 50px;
+            border-radius: 32px;
+            backdrop-filter: var(--glass-blur);
+            transition: 0.3s;
+        }
+
+        .glass-card:hover {
+            border-color: var(--primary-emerald);
+            transform: translateY(-10px);
+        }
+
+        .card-icon {
+            font-size: 3rem;
+            margin-bottom: 30px;
+            display: block;
+            filter: drop-shadow(0 0 15px var(--primary-glow));
+        }
+
+        .glass-card h3 {
+            font-size: 2rem;
+            margin-bottom: 20px;
+            color: var(--primary-emerald);
+        }
+
+        /* --- Technical Section --- */
+        .tech-box {
+            display: flex;
+            align-items: center;
+            gap: 60px;
+            margin-top: 80px;
+        }
+
+        .tech-text {
+            flex: 1;
+        }
+
+        .tech-visual {
+            flex: 0.8;
+        }
+
+        .tech-image {
+            width: 100%;
+            border-radius: 24px;
+            border: 1px solid var(--border-muted);
+            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.5);
+        }
+
+        /* --- Entropy Tiers Table --- */
+        .tier-matrix {
+            margin-top: 80px;
+            border: 1px solid var(--border-muted);
+            border-radius: 24px;
+            overflow: hidden;
+        }
+
+        .tier-row {
+            display: grid;
+            grid-template-columns: 80px 1fr 2fr;
+            padding: 30px;
+            border-bottom: 1px solid var(--border-muted);
+            transition: 0.2s;
+        }
+
+        .tier-row:hover {
+            background: rgba(16, 185, 129, 0.03);
+        }
+
+        .tier-id {
+            font-weight: 900;
+            color: var(--primary-emerald);
+            font-family: 'Outfit', sans-serif;
+        }
+
+        .tier-title {
+            font-weight: 700;
+            color: #fff;
+        }
+
+        .tier-desc {
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+        }
+
+        /* --- Code & Formulas --- */
+        .code-snippet {
+            background: #080808;
+            padding: 25px;
+            border-radius: 12px;
+            font-family: 'Fira Code', monospace;
+            font-size: 0.85rem;
+            color: #888;
+            border: 1px solid #111;
+            line-height: 1.5;
+        }
+
+        .keyword {
+            color: var(--accent-crimson);
+        }
+
+        .function {
+            color: var(--secondary-cyan);
+        }
+
+        .formula {
+            display: block;
+            padding: 15px;
+            margin: 20px 0;
+            border-left: 3px solid var(--primary-emerald);
+            background: rgba(16, 185, 129, 0.05);
+            color: #fff;
+            font-size: 1.1rem;
+        }
+
+        /* --- Highlights/Blockquotes --- */
+        .philosophy-strip {
+            background: linear-gradient(90deg, #0a0a0a, #161b22, #0a0a0a);
+            padding: 80px 0;
+            text-align: center;
+            border-top: 1px solid var(--border-muted);
+            border-bottom: 1px solid var(--border-muted);
+        }
+
+        .phil-quote {
+            font-size: 2rem;
+            font-weight: 300;
+            font-family: 'Outfit';
+            font-style: italic;
+            max-width: 900px;
+            margin: 0 auto;
+            color: var(--text-primary);
+        }
+
+        /* --- Footer --- */
+        footer {
+            padding: 100px 0 60px;
+            background: #020202;
+            border-top: 1px solid var(--border-muted);
+        }
+
+        .footer-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr;
+            gap: 80px;
+        }
+
+        .footer-logo {
+            font-size: 2rem;
+            font-weight: 900;
+            margin-bottom: 30px;
+        }
+
+        .footer-links h4 {
+            color: #fff;
+            text-transform: uppercase;
+            font-size: 0.8rem;
+            letter-spacing: 0.1em;
+            margin-bottom: 25px;
+        }
+
+        .footer-links ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .footer-links li {
+            margin-bottom: 15px;
+        }
+
+        .footer-links a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            transition: 0.3s;
+        }
+
+        .footer-links a:hover {
+            color: var(--primary-emerald);
+        }
+
+        .copyright {
+            text-align: center;
+            margin-top: 80px;
+            font-size: 0.8rem;
+            color: #444;
+            border-top: 1px solid #111;
+            padding-top: 40px;
+        }
+
+        /* --- Responsive --- */
+        @media (max-width: 900px) {
+            .grid-3 {
+                grid-template-columns: 1fr;
+            }
+
+            .tech-box {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .tier-row {
+                grid-template-columns: 1fr;
+                gap: 10px;
+            }
+
+            .hero-title {
+                font-size: 4rem;
+            }
+
+            .nav-links {
+                display: none;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <nav>
+        <div class="container nav-inner">
+            <div class="logo">BIT<span>RESURRECTOR</span></div>
+            <div class="nav-links">
+                <a href="#philosophy">Philosophy</a>
+                <a href="#engine">Sniper Engine</a>
+                <a href="#sieve">The Sieve</a>
+                <a href="#gpu">GPU Scaling</a>
+                <a href="#contact">Recovery Path</a>
+            </div>
+            <a href="https://github.com/leadzevs/bitResurrector/" class="btn btn-primary"
+                style="padding: 10px 20px; font-size: 0.7rem;">Download Suite</a>
+        </div>
+    </nav>
+
+    <header class="hero">
+        <div class="container">
+            <h1 class="hero-title">RECLAIM THE <br><span class="gradient-text">DIGITAL NECROPOLIS</span></h1>
+            <p class="hero-desc">The industry's most advanced software suite for the forensic recovery of abandoned
+                Bitcoin assets from the secp256k1 scalar field.</p>
+            <div class="cta">
+                <a href="https://github.com/leadzevs/bitResurrector/" class="btn btn-primary">Download Current
+                    Release</a>
+                <a href="#engine" class="btn btn-outline">Explore Implementation</a>
+            </div>
+        </div>
+    </header>
+
+    <section id="philosophy">
+        <div class="container">
+            <div class="section-heading" style="text-align: center; margin-bottom: 100px;">
+                <h2 style="font-size: 3.5rem;">Digital Archaeology.</h2>
+                <p style="color: var(--text-secondary);">Addressing the 4 million BTC frozen in early-era wallets
+                    (2009–2015).</p>
+            </div>
+            <div class="grid-3">
+                <div class="glass-card">
+                    <span class="card-icon">⚖️</span>
+                    <h3>Financial Justice</h3>
+                    <p>Every found private key is a direct realization of personal benefit. We believe access to
+                        "digital treasure" hunting shouldn't be a privilege of a narrow circle—it should be available to
+                        everyone through forensic capital recovery.</p>
+                </div>
+                <div class="glass-card">
+                    <span class="card-icon">⚡</span>
+                    <h3>Liquidity Resurrection</h3>
+                    <p>By returning dormant coins to circulation, users act as network "resuscitators." Every successful
+                        transaction saturates the global market with liquidity, making Bitcoin a more functional
+                        financial instrument.</p>
+                </div>
+                <div class="glass-card">
+                    <span class="card-icon">🔬</span>
+                    <h3>Technological Audit</h3>
+                    <p>BitResurrector is a challenge to cryptographic dogmas. We prove that current protection is not
+                        absolute by auditing historical PRNG weaknesses, signaling the need for quantum-resistant
+                        storage standards.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <div class="philosophy-strip">
+        <div class="container">
+            <p class="phil-quote">"The 77-digit shield is not an absolute constant in a world of growing computational
+                entropy. If a sequence was generated once, it can, by definition, be reproduced again."</p>
+        </div>
+    </div>
+
+    <section id="engine">
+        <div class="container">
+            <div class="tech-box">
+                <div class="tech-text">
+                    <h2 class="gradient-text" style="font-size: 3rem;">Sniper Engine v3.37</h2>
+                    <p>The technical viability of bitResurrector is based on our industrial kernel written in C++ with
+                        extreme optimization for AVX-512 and CUDA architectures.</p>
+
+                    <h3>Montgomery Modular Transformation</h3>
+                    <p>Standard modular reduction (DIV) is a blocking operation requiring 80+ cycles. Sniper Engine
+                        implements <strong>Montgomery REDC</strong>, replacing division with single-cycle bit shifts and
+                        masks.</p>
+                    <div class="formula">REDC(T) = (T + (T · m' mod R) · n) / R</div>
+                    <p style="font-size: 0.9rem; color: var(--text-secondary);">Eliminating the DIV instruction frees up
+                        more than 85% of computational cycles, making a home PC equivalent to a specialized computing
+                        farm.</p>
+                </div>
+                <div class="tech-visual">
+                    <img src="https://ai-seedfinder.com/wp-content/uploads/Figure_10_Bloom_Architecture_Detailed.jpg"
+                        alt="Sniper Engine Architecture" class="tech-image">
+                </div>
+            </div>
+
+            <div class="tech-box" style="margin-top: 100px; flex-direction: row-reverse;">
+                <div class="tech-text">
+                    <h2 class="gradient-text" style="font-size: 3rem;">AVX-512 Bit-Slicing</h2>
+                    <p>Modern CPUs with 512-bit ZMM registers are treated as a vertical bit matrix. We transponse 16
+                        independent 256-bit numbers, allowing a single CPU instruction to process 16 objects
+                        simultaneously.</p>
+
+                    <h3>Bloom Filter O(1) Verification</h3>
+                    <p>To break the I/O bottleneck, we pack 58 million active targets into a 300MB probabilistic index.
+                        Memory-mapped files (mmap) project this atlas directly into RAM for instant lookup.</p>
+                    <div class="formula">False Positive Rate: P ≈ (1 - e^(-kn/m))^k</div>
+                    <p style="font-size: 0.9rem; color: var(--text-secondary);">With m=2.15B and n=58M, our FPR is
+                        0.28%, cutting off 99.72% of "empty" keys instantly at L3 cache level.</p>
+                </div>
+                <div class="tech-visual">
+                    <img src="https://ai-seedfinder.com/wp-content/uploads/bitresurrector_bloom_filter_comic-1.jpg"
+                        alt="Bloom Filter Tech" class="tech-image">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="sieve">
+        <div class="container">
+            <div style="text-align: center; margin-bottom: 60px;">
+                <h2 style="font-size: 3.5rem;">The Intelligent Entropy Sieve.</h2>
+                <p style="color: var(--text-secondary);">Every scalar is subjected to deep statistical expertise across
+                    9 independent echelons.</p>
+            </div>
+
+            <div class="tier-matrix">
+                <div class="tier-row">
+                    <div class="tier-id">01 / HIST</div>
+                    <div class="tier-title">NIST Monobit Density</div>
+                    <div class="tier-desc">Hamming Weight evaluation (NIST SP 800-22). Discards scalars deviating more
+                        than ±2.25σ (Target range: 110-146 unit bits).</div>
+                </div>
+                <div class="tier-row">
+                    <div class="tier-id">02 / GRAV</div>
+                    <div class="tier-title">Decimal Gravity Factor</div>
+                    <div class="tier-desc">Numerical focusing on range [10^76, 10^77). Concentrates search on the "elite
+                        sector" used by professional Electrum-class wallets.</div>
+                </div>
+                <div class="tier-row">
+                    <div class="tier-id">03 / SPEC</div>
+                    <div class="tier-title">Combinatorial Diversity</div>
+                    <div class="tier-desc">Alphabet diversity audit. Truly random keys with < 9 unique decimal digits
+                            occur at P < 10^-20. Triggers automatic exclusion.</div>
+                    </div>
+                    <div class="tier-row">
+                        <div class="tier-id">04 / RUNS</div>
+                        <div class="tier-title">Serial Pattern Analysis</div>
+                        <div class="tier-desc">Detects anomalous runs of k=7 identical digits (e.g., "0000000"). Proves
+                            structural determinism typical of flawed PRNG seeds.</div>
+                    </div>
+                    <div class="tier-row">
+                        <div class="tier-id">05 / SHAN</div>
+                        <div class="tier-title">Shannon Metric (H ≥ 3.10)</div>
+                        <div class="tier-desc">Ultimate audit of symbol unpredictability. Values below 3.10 represent
+                            terminal data degradation, flagged for Forensic API Probing.</div>
+                    </div>
+                    <div class="tier-row">
+                        <div class="tier-id">06 / LONE</div>
+                        <div class="tier-title">Binary Longest Run</div>
+                        <div class="tier-desc">Detection of bit-sticking (NIST SP 800-22). Block-runs of 17+ identical
+                            bits mark hardware RNG bias and Sequential Entropy Collapse.</div>
+                    </div>
+                    <div class="tier-row">
+                        <div class="tier-id">07 / CYCL</div>
+                        <div class="tier-title">Hexadecimal Cyclicity</div>
+                        <div class="tier-desc">Identifies repetitive nibble loops. Prevents memory alignment artifacts
+                            (Memory Padding) from entering the validation pipeline.</div>
+                    </div>
+                    <div class="tier-row">
+                        <div class="tier-id">08 / COUP</div>
+                        <div class="tier-title">Coupon Collector Nibbles</div>
+                        <div class="tier-desc">Spectral HEX alphabet audit. Discards keys with narrow-spectral bias
+                            (missing 4+ nibbles from the 16-hex set).</div>
+                    </div>
+                    <div class="tier-row">
+                        <div class="tier-id">09 / BYTE</div>
+                        <div class="tier-title">AIS 31 Byte Diversity</div>
+                        <div class="tier-desc">Final sparsity check. Requires minimum 20 unique values per 32-byte
+                            representation. Eliminates "mathematical corpses" instantly.</div>
+                    </div>
+                </div>
+            </div>
+    </section>
+
+    <section id="gpu">
+        <div class="container">
+            <div class="tech-box">
+                <div class="tech-text">
+                    <h2 class="gradient-text" style="font-size: 3rem;">"Random Bites" Strategy</h2>
+                    <p>Linear scanning in 2^256 is futile. bitResurrector uses a stochastic search geometry on the
+                        NVIDIA CUDA platform.</p>
+
+                    <ul style="color: var(--text-secondary); padding: 0; list-style: none;">
+                        <li style="margin-bottom: 20px;"><strong>Stochastic Jumps:</strong> The GPU selects a random
+                            coordinate and initiates a localized "excavation" of 2^32 keys over 45 seconds.</li>
+                        <li style="margin-bottom: 20px;"><strong>Thermal Duty Cycle (45/15):</strong> Optimized
+                            thermodynamic management for long-term GPU health, alternating high-intensity phases with
+                            cooling intervals.</li>
+                        <li><strong>Entropy Segregation:</strong> High-entropy targets are checked offline (Sniper
+                            Mode), while anomalous "disturbed" keys are routed to the API Global module for
+                            micro-balance verification.</li>
+                    </ul>
+                </div>
+                <div class="tech-visual">
+                    <img src="https://ai-seedfinder.com/wp-content/uploads/turbo_mode_comic_panel_1769365906700.jpg"
+                        alt="GPU Acceleration" class="tech-image">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="operational" style="background: rgba(16,185,129,0.02);">
+        <div class="container">
+            <div class="grid-3">
+                <div class="glass-card">
+                    <h3>Sniper Mode</h3>
+                    <p>Pinnacle of autonomy and performance. High-speed offline scanning of an infinite key space using
+                        local Bloom filters 직접 RAM-에서.</p>
+                </div>
+                <div class="glass-card">
+                    <h3>API Global Mode</h3>
+                    <p>Precision real-time verification via distributed node clusters. Confirms assets on dubious or
+                        newly active SegWit and Taproot addresses.</p>
+                </div>
+                <div class="glass-card">
+                    <h3>Zombie Recovery</h3>
+                    <p>Targeted analysis of "digital graves"—addresses containing up to 4 million BTC that have shown no
+                        activity since the Nakamoto era.</p>
+                </div>
+            </div>
+
+            <div class="glass-card" style="margin-top: 60px; border-color: var(--accent-crimson);">
+                <h2 style="color: var(--accent-crimson);">Heuristic Detection: Why Antiviruses are Afraid</h2>
+                <p>Modern scanners (Windows Defender) classify professional cryptographic software as "Potentially
+                    Unwanted". This is a <strong>False Positive</strong> caused by:</p>
+                <div
+                    style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; font-size: 0.9rem; color: var(--text-secondary);">
+                    <div>• Optimized assembly inserts mistaken for malware.</div>
+                    <div>• Stealth behaviors interpretations our high-priority scheduling.</div>
+                    <div>• High-entropy generation patterns looking like "suspicious noise".</div>
+                    <div>• Direct memory access (mmap) for ultra-fast verification.</div>
+                </div>
+                <p style="margin-top: 20px; font-weight: 700;">Instruction: Add the program directory to Antivirus
+                    EXCLUSIONS to unlock full power.</p>
+            </div>
+        </div>
+    </section>
+
+    <section id="specs">
+        <div class="container">
+            <div class="grid-3">
+                <div>
+                    <h4 style="text-transform: uppercase; color: var(--primary-emerald);">Minimal Baseline</h4>
+                    <p style="font-size: 0.9rem;">The program will launch and search stably:</p>
+                    <ul style="font-size: 0.85rem; color: var(--text-secondary);">
+                        <li>CPU: Intel i3 / Ryzen 3</li>
+                        <li>RAM: 4 GB DDR3+</li>
+                        <li>GPU: Integrated Graphics (OpenCL)</li>
+                        <li>OS: Windows 7/8/10/11 (64-bit)</li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 style="text-transform: uppercase; color: var(--secondary-cyan);">Professional Spec</h4>
+                    <p style="font-size: 0.9rem;">For high-performance industrial search:</p>
+                    <ul style="font-size: 0.85rem; color: var(--text-secondary);">
+                        <li>CPU: Intel i7 / Ryzen 7 (AVX-512)</li>
+                        <li>RAM: 8 GB - 16 GB DDR4/5</li>
+                        <li>GPU: NVIDIA RTX 2060 / 3080 / 4090 (CUDA)</li>
+                        <li>Storage: NVMe SSD (Fast Bloom Index Loading)</li>
+                    </ul>
+                </div>
+                <div style="text-align: center;">
+                    <a href="https://sourceforge.net/projects/bitresurrector/" class="btn btn-primary">Download
+                        Suite</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <div class="container footer-grid">
+            <div>
+                <div class="footer-logo">BIT<span>RESURRECTOR</span></div>
+                <p style="color: var(--text-secondary); font-size: 0.9rem;">Forged in the fires of low-level
+                    optimization. Reclaiming the past for the global future of financial sovereignity.</p>
+            </div>
+            <div class="footer-links">
+                <h4>Ecosystem</h4>
+                <ul>
+                    <li><a href="https://ai-seedfinder.com/bitresurrector">Official Hub</a></li>
+                    <li><a href="https://github.com/leadzevs/bitResurrector/">GitHub Repository</a></li>
+                    <li><a href="https://sourceforge.net/projects/bitresurrector/">SourceForge mirror</a></li>
+                    <li><a href="https://t.me/aiseedfinder">Recovery Telegram</a></li>
+                </ul>
+            </div>
+            <div class="footer-links">
+                <h4>Technologies</h4>
+                <ul>
+                    <li><a href="#engine">Sniper Engine v3.37</a></li>
+                    <li><a href="#sieve">Entropy Matrix</a></li>
+                    <li><a href="#gpu">CUDA Accelerator</a></li>
+                    <li><a href="https://ai-seedfinder.com/mainpage.html">AI Seed Phrase Finder</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="container copyright">
+            © 2026 bitResurrector Technical Team & Forensic Cryptography Laboratory.
+            <br>The "Zombie Coins" are not gone—the distance to them is merely a function of your hardware and our code.
+        </div>
+    </footer>
+
+</body>
+
+</html>
