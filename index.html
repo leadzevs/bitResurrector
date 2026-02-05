@@ -4,751 +4,2316 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>bitResurrector v3.0 | The Industrial-Grade Suite for Digital Archaeology</title>
-
-    <!-- SEO & Advanced Meta -->
+    <link rel="icon" type="image/x-icon" href="assets/img/app_icon.ico">
+    <link rel="shortcut icon" href="assets/img/app_icon.ico">
+    <link rel="apple-touch-icon" href="assets/img/bitresurrector_logo_v3.png">
+    <title>bitResurrector v3.0 | Professional Bitcoin Private Key Generator & Recovery</title>
     <meta name="description"
-        content="Official technical overview of bitResurrector v3.0 and the Sniper Engine. Advanced Bitcoin key recovery suite utilizing AVX-512, Montgomery REDC, and a 9-tier entropy filtration sieve to reclaim abandoned digital assets.">
+        content="BitResurrector: Professional-grade software for high-speed Bitcoin private key generation and lost asset recovery. Discover abandoned wallets using GPU power and Bloom filter technology.">
     <meta name="keywords"
-        content="bitResurrector, Sniper Engine v3.37, Bitcoin key recovery, Digital Archaeology, Montgomery REDC, AVX-512 Bit-Slicing, CUDA, Bloom Filter, Shannon Entropy, NIST SP 800-22, bitResurrector download">
-    <link rel="canonical" href="https://bitresurrector.vercel.app" />
+        content="bitResurrector, Bitcoin recovery, private key generator, secp256k1, Bloom filter, blockchain forensic, digital archaeology">
 
-    <!-- Fonts: Outfit (Brand), Inter (Readability), Fira Code (Monospace) -->
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://ai-seedfinder.com/bitresurrector">
+    <meta property="og:title" content="bitResurrector v3.0 | Professional Bitcoin Private Key Generator & Recovery">
+    <meta property="og:description"
+        content="Free industrial-grade tool for discovering lost Bitcoin assets. High-speed private key generation powered by Sniper Engine v3.37.">
+    <meta property="og:image" content="assets/img/interface-1.png">
+
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:title"
+        content="bitResurrector v3.0 | Professional Bitcoin Private Key Generator & Recovery">
+    <meta property="twitter:description"
+        content="High-speed tool for recovering lost Bitcoin private keys using advanced mathematical search and GPU acceleration.">
+    <meta property="twitter:image" content="assets/img/interface-1.png">
+
+    <!-- Schema.org for Google -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "SoftwareApplication",
+      "name": "bitResurrector",
+      "operatingSystem": "Windows 7, 8, 10, 11 (64-bit)",
+      "applicationCategory": "SecurityApplication",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      },
+      "description": "Professional Bitcoin private key generator designed to search for abandoned assets by checking billions of keys against a global balance database using Bloom filters.",
+      "softwareVersion": "3.0.3",
+      "downloadUrl": "https://github.com/leadzevs/bitResurrector/releases/download/v3.0.3/bitResurrector_v3.0.3_Setup.exe",
+      "featureList": [
+        "High-speed private key generation",
+        "Bloom Filter O(1) matching logic",
+        "GPU Acceleration (NVIDIA CUDA support)",
+        "AVX-512 and Montgomery REDC optimization",
+        "Wallet discovery for Legacy, SegWit and Bech32"
+      ]
+    }
+    </script>
+
+    <!-- Premium Font Stack -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link
-        href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800;900&family=Inter:wght@300;400;500;700&family=Fira+Code:wght@400;500&display=swap"
+        href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;500;700;900&family=Orbitron:wght@400;700;900&family=JetBrains+Mono:wght@400;700&display=swap"
         rel="stylesheet">
 
-    <!-- Styles: Premium Dark-Mode Technical Aesthetic -->
     <style>
         :root {
-            --bg-obsidian: #050505;
-            --bg-surface: rgba(18, 18, 18, 0.7);
-            --primary-emerald: #10b981;
-            --primary-glow: rgba(16, 185, 129, 0.3);
-            --secondary-cyan: #06b6d4;
-            --accent-crimson: #ef4444;
-            --text-primary: #f8fafc;
-            --text-secondary: #94a3b8;
-            --border-muted: rgba(255, 255, 255, 0.08);
-            --glass-blur: blur(12px);
+            --bg: #000000;
+            --accent: #00ff88;
+            --accent-glow: rgba(0, 255, 136, 0.5);
+            --surface: rgba(10, 10, 10, 0.85);
+            --text-main: #b0b0b0;
+            --text-white: #ffffff;
+            --border: rgba(255, 255, 255, 0.08);
+            --glass: rgba(255, 255, 255, 0.03);
+            --font-main: 'Outfit', sans-serif;
+            --font-mono: 'JetBrains Mono', monospace;
+            --font-heading: 'Orbitron', sans-serif;
         }
 
         * {
-            box-sizing: border-box;
-            scroll-behavior: smooth;
-        }
-
-        body {
             margin: 0;
             padding: 0;
-            background-color: var(--bg-obsidian);
-            color: var(--text-primary);
-            font-family: 'Inter', sans-serif;
-            line-height: 1.7;
-            overflow-x: hidden;
+            box-sizing: border-box;
+            cursor: crosshair;
         }
 
-        /* --- Custom Scrollbar --- */
         ::-webkit-scrollbar {
-            width: 8px;
+            width: 5px;
         }
 
         ::-webkit-scrollbar-track {
-            background: var(--bg-obsidian);
+            background: #000;
         }
 
         ::-webkit-scrollbar-thumb {
-            background: #222;
-            border-radius: 4px;
+            background: var(--accent);
+            border-radius: 10px;
         }
 
-        ::-webkit-scrollbar-thumb:hover {
-            background: var(--primary-emerald);
+        body {
+            background-color: var(--bg);
+            color: var(--text-main);
+            font-family: var(--font-main);
+            overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
+            background-image:
+                linear-gradient(rgba(15, 15, 15, 0.5) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(15, 15, 15, 0.5) 1px, transparent 1px);
+            background-size: 30px 30px, 30px 30px;
+            background-attachment: fixed;
         }
 
-        /* --- Typography & Headers --- */
-        h1,
-        h2,
-        h3,
-        h4 {
-            font-family: 'Outfit', sans-serif;
-            font-weight: 800;
-            margin: 0;
-            letter-spacing: -0.02em;
+        /* --- Cursor Glow --- */
+        #cursor-glow {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at var(--mouse-x, 50%) var(--mouse-y, 50%), rgba(0, 255, 136, 0.2) 0%, transparent 50%);
+            pointer-events: none;
+            z-index: -1;
+            transition: opacity 0.3s;
         }
 
-        .gradient-text {
-            background: linear-gradient(135deg, var(--primary-emerald), var(--secondary-cyan));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
+        /* --- Progress Bar --- */
+        #scroll-progress {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 0%;
+            height: 4px;
+            background: linear-gradient(90deg, var(--accent), #00ff88, #00bdff);
+            z-index: 2000;
+            transition: width 0.1s ease-out;
+            box-shadow: 0 0 15px var(--accent-glow), 0 0 5px #fff;
         }
 
-        /* --- Layout Structure --- */
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 0 40px;
-        }
-
-        section {
-            padding: 120px 0;
-            border-bottom: 1px solid var(--border-muted);
-        }
-
-        /* --- Header/Nav --- */
+        /* --- Header --- */
         nav {
             position: fixed;
             top: 0;
             width: 100%;
             z-index: 1000;
-            background: rgba(5, 5, 5, 0.8);
-            backdrop-filter: var(--glass-blur);
-            border-bottom: 1px solid var(--border-muted);
-            padding: 20px 0;
+            background: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            height: 75px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background 0.3s;
         }
 
         .nav-inner {
+            width: 100%;
+            max-width: 1600px;
             display: flex;
             justify-content: space-between;
             align-items: center;
+            padding: 0 60px;
         }
 
-        .logo {
-            font-size: 1.5rem;
-            font-weight: 900;
+        .logo-group {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            text-decoration: none;
+        }
+
+        .logo-img {
+            height: clamp(35px, 5vw, 50px);
+            filter: drop-shadow(0 0 10px var(--accent-glow));
+            transition: 0.3s;
+        }
+
+        .logo-name {
+            font-family: var(--font-heading);
+            font-size: clamp(0.9rem, 1.5vw, 1.1rem);
             color: #fff;
-            text-transform: uppercase;
-        }
-
-        .logo span {
-            color: var(--primary-emerald);
+            letter-spacing: 2px;
+            font-weight: 700;
         }
 
         .nav-links {
             display: flex;
-            gap: 30px;
+            gap: 40px;
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            transition: 0.3s;
         }
 
         .nav-links a {
-            color: var(--text-secondary);
+            color: #888;
             text-decoration: none;
-            font-size: 0.9rem;
-            font-weight: 600;
-            transition: color 0.3s;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            font-weight: 500;
+            white-space: nowrap;
+            transition: 0.3s;
         }
 
         .nav-links a:hover {
-            color: var(--primary-emerald);
+            color: var(--accent);
+            text-shadow: 0 0 10px var(--accent-glow);
+        }
+
+        .menu-toggle {
+            display: none;
+            flex-direction: column;
+            gap: 6px;
+            background: rgba(0, 255, 136, 0.05);
+            border: 1px solid rgba(0, 255, 136, 0.2);
+            border-radius: 8px;
+            cursor: pointer;
+            padding: 10px;
+            z-index: 2000;
+            width: 45px;
+            height: 45px;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .menu-toggle span {
+            display: block;
+            width: 25px;
+            height: 2px;
+            background: var(--accent);
+            box-shadow: 0 0 5px var(--accent-glow);
+            transition: 0.3s;
+        }
+
+        @media (max-width: 1024px) {
+            .menu-toggle {
+                display: flex;
+            }
+
+            .nav-links {
+                position: fixed;
+                top: 0;
+                right: -100%;
+                width: 70%;
+                height: 100vh;
+                background: rgba(0, 0, 0, 0.95);
+                backdrop-filter: blur(20px);
+                flex-direction: column;
+                justify-content: center;
+                align-items: center;
+                transition: 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+                border-left: 1px solid var(--border);
+            }
+
+            .nav-links.active {
+                right: 0;
+            }
+
+            .nav-inner {
+                padding: 0 20px;
+            }
+
+            .nav-actions {
+                display: none;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .logo-name {
+                display: none;
+            }
+        }
+
+        .nav-actions {
+            display: flex;
+            gap: 20px;
+            align-items: center;
+        }
+
+        .nav-btn-ghost {
+            color: #666;
+            text-decoration: none;
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            padding: 8px 15px;
+            border: 1px solid transparent;
+            transition: 0.3s;
+        }
+
+        .nav-btn-ghost:hover {
+            color: #fff;
+            border-color: rgba(255, 255, 255, 0.1);
+            background: rgba(255, 255, 255, 0.02);
+            border-radius: 4px;
         }
 
         /* --- Hero Section --- */
         .hero {
-            position: relative;
-            height: 100vh;
+            min-height: 100vh;
             display: flex;
+            flex-direction: column;
             align-items: center;
             justify-content: center;
             text-align: center;
-            background: radial-gradient(circle at center, rgba(16, 185, 129, 0.1) 0%, transparent 70%);
+            position: relative;
+            padding: 180px 40px 100px;
+            background: linear-gradient(180deg, transparent 0%, rgba(0, 255, 136, 0.02) 100%);
         }
 
-        .hero::before {
+        #hero-canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .main-title {
+            font-family: var(--font-heading);
+            font-size: clamp(2.5rem, 6vw, 5rem);
+            color: #fff;
+            font-weight: 900;
+            line-height: 1.1;
+            letter-spacing: -1px;
+            margin-bottom: 30px;
+            text-transform: uppercase;
+            text-shadow: 0 0 30px rgba(0, 0, 0, 0.5);
+            position: relative;
+            z-index: 10;
+            min-height: 1.2em;
+            display: block;
+            text-align: center;
+            width: 100%;
+        }
+
+        .scramble-span {
+            display: inline-block;
+        }
+
+        @keyframes glitch {
+            0% {
+                transform: translate(0)
+            }
+
+            20% {
+                transform: translate(-2px, 2px)
+            }
+
+            40% {
+                transform: translate(-2px, -2px)
+            }
+
+            60% {
+                transform: translate(2px, 2px)
+            }
+
+            80% {
+                transform: translate(2px, -2px)
+            }
+
+            100% {
+                transform: translate(0)
+            }
+        }
+
+        .main-title span {
+            position: relative;
+        }
+
+        .hero-desc {
+            font-size: 1.4rem;
+            max-width: 800px;
+            line-height: 1.6;
+            font-weight: 300;
+            margin-bottom: 60px;
+            color: #888;
+            transition: color 0.5s;
+        }
+
+        .hero:hover .hero-desc {
+            color: #fff;
+        }
+
+        /* --- Buttons --- */
+        .btn-premium {
+            position: relative;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 22px 50px;
+            background: rgba(0, 0, 0, 0.4);
+            border: 1px solid var(--accent);
+            color: var(--accent);
+            font-family: var(--font-heading);
+            font-size: 1rem;
+            font-weight: 700;
+            text-decoration: none;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            overflow: hidden;
+            transition: 0.4s cubic-bezier(0.19, 1, 0.22, 1);
+            backdrop-filter: blur(10px);
+            box-shadow: 0 0 20px rgba(0, 255, 136, 0.05);
+        }
+
+        .btn-premium::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(0, 255, 136, 0.2), transparent);
+            transition: 0.5s;
+        }
+
+        .btn-premium:hover {
+            color: #000;
+            background: var(--accent);
+            box-shadow: 0 0 40px var(--accent-glow);
+            transform: translateY(-3px);
+        }
+
+        .btn-premium:hover::before {
+            left: 100%;
+        }
+
+        .btn-ghost {
+            color: #fff;
+            border-color: rgba(255, 255, 255, 0.2);
+            background: rgba(255, 255, 255, 0.03);
+        }
+
+        .btn-ghost:hover {
+            background: #fff;
+            color: #000;
+            border-color: #fff;
+            box-shadow: 0 0 40px rgba(255, 255, 255, 0.2);
+        }
+
+        /* --- Download Pod --- */
+        .download-pod {
+            background: rgba(15, 15, 15, 0.8);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            padding: 30px;
+            display: flex;
+            align-items: center;
+            gap: 30px;
+            margin-top: 50px;
+            max-width: 600px;
+            backdrop-filter: blur(10px);
+            position: relative;
+            z-index: 10;
+        }
+
+        @media (max-width: 600px) {
+            .download-pod {
+                flex-direction: column;
+                text-align: center;
+                gap: 20px;
+                padding: 20px;
+                width: 100% !important;
+            }
+
+            .pod-info {
+                text-align: center !important;
+            }
+
+            .main-title {
+                font-size: clamp(2rem, 10vw, 3.5rem);
+            }
+
+            .hero-desc {
+                font-size: 1.1rem !important;
+            }
+        }
+
+        .pod-info {
+            text-align: left;
+        }
+
+        .pod-ver {
+            font-family: var(--font-mono);
+            color: var(--accent);
+            font-size: 0.8rem;
+            margin-bottom: 5px;
+            display: block;
+        }
+
+        .pod-hash {
+            font-family: var(--font-mono);
+            font-size: 0.65rem;
+            color: #444;
+            margin-top: 10px;
+            display: block;
+            word-break: break-all;
+            line-height: 1.4;
+        }
+
+        /* --- Performance Viz --- */
+        .perf-box {
+            margin-top: 40px;
+            background: rgba(0, 0, 0, 0.4);
+            border: 1px solid var(--border);
+            padding: 30px;
+            border-radius: 20px;
+        }
+
+        .perf-row {
+            margin-bottom: 20px;
+        }
+
+        .perf-label {
+            display: flex;
+            justify-content: space-between;
+            font-family: var(--font-mono);
+            font-size: 0.75rem;
+            margin-bottom: 10px;
+        }
+
+        .perf-bar-bg {
+            height: 8px;
+            background: #111;
+            border-radius: 4px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .perf-bar-fill {
+            height: 100%;
+            background: var(--accent);
+            width: 0%;
+            transition: width 2s cubic-bezier(0.19, 1, 0.22, 1);
+            box-shadow: 0 0 10px var(--accent-glow);
+        }
+
+        .perf-row.standard .perf-bar-fill {
+            background: #444;
+            box-shadow: none;
+        }
+
+        /* --- Visual Depth --- */
+        .section-wrap {
+            padding: 180px 0;
+            position: relative;
+        }
+
+        .container {
+            max-width: 1600px;
+            margin: 0 auto;
+            padding: 0 60px;
+            position: relative;
+            z-index: 2;
+        }
+
+        h2.section-header {
+            font-family: var(--font-heading);
+            font-size: clamp(2rem, 5vw, 3.5rem);
+            color: #fff;
+            margin-bottom: 80px;
+            text-transform: uppercase;
+            letter-spacing: -1px;
+            display: flex;
+            align-items: center;
+            gap: clamp(15px, 3vw, 30px);
+        }
+
+        @media (max-width: 768px) {
+            .hero {
+                padding: 120px 20px 60px;
+            }
+
+            .section-wrap {
+                padding: 80px 0;
+            }
+
+            .container {
+                padding: 0 25px;
+            }
+
+            .nav-inner {
+                padding: 0 25px;
+            }
+        }
+
+        h2.section-header::before {
+            content: '';
+            width: 60px;
+            height: 3px;
+            background: var(--accent);
+        }
+
+        /* --- Cards --- */
+        .bento {
+            display: grid;
+            grid-template-columns: repeat(12, 1fr);
+            gap: 30px;
+        }
+
+        .card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 30px;
+            padding: 50px;
+            position: relative;
+            transition: 0.6s cubic-bezier(0.23, 1, 0.32, 1);
+            overflow: hidden;
+            backdrop-filter: blur(15px);
+        }
+
+        .card:hover {
+            border-color: rgba(255, 255, 255, 0.2);
+            transform: translateY(-10px) scale(1.02);
+            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.8);
+        }
+
+        .card h3 {
+            color: #fff;
+            font-size: 2rem;
+            margin-bottom: 25px;
+            font-family: var(--font-heading);
+        }
+
+        .card p {
+            font-size: 1.1rem;
+            line-height: 1.8;
+            color: #999;
+        }
+
+        .img-card {
+            width: 100%;
+            margin: 60px 0;
+            border-radius: 24px;
+            border: 1px solid var(--border);
+            overflow: hidden;
+            position: relative;
+            box-shadow: 0 40px 100px rgba(0, 0, 0, 0.6);
+        }
+
+        .img-card img {
+            width: 100%;
+            display: block;
+            filter: contrast(1.1) brightness(0.9);
+            transition: 0.8s ease;
+        }
+
+        .img-card:hover img {
+            transform: scale(1.03);
+            filter: brightness(1.1);
+        }
+
+        /* --- Sieve Matrix --- */
+        .sieve-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+        }
+
+        .sieve-item {
+            background: #080808;
+            border: 1px solid #151515;
+            padding: 35px;
+            border-radius: 20px;
+            transition: 0.5s cubic-bezier(0.23, 1, 0.32, 1);
+            position: relative;
+            overflow: hidden;
+            transform-style: preserve-3d;
+            perspective: 1000px;
+            cursor: pointer;
+        }
+
+        .sieve-item::before {
+            content: '+';
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            font-family: var(--font-mono);
+            color: var(--accent);
+            font-size: 1.2rem;
+            transition: 0.3s;
+        }
+
+        .sieve-item.expanded::before {
+            content: '−';
+            transform: rotate(90deg);
+        }
+
+        .sieve-details {
+            max-height: 0;
+            overflow: hidden;
+            transition: all 0.6s cubic-bezier(0.165, 0.84, 0.44, 1);
+            margin-top: 0;
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .sieve-item.expanded .sieve-details {
+            max-height: 800px;
+            margin-top: 25px;
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .sieve-details .detail-text {
+            color: #ddd;
+            font-size: 0.95rem;
+            line-height: 1.6;
+            padding-top: 20px;
+            border-top: 1px solid rgba(0, 255, 136, 0.15);
+            font-weight: 300;
+        }
+
+        .sieve-item:hover {
+            border-color: var(--accent);
+            background: #0c0c0c;
+            box-shadow: 0 20px 50px rgba(0, 255, 136, 0.15);
+            transform: scale(1.03) translateZ(30px) !important;
+        }
+
+        .sieve-item::after {
             content: '';
             position: absolute;
             top: 0;
             left: 0;
-            right: 0;
-            bottom: 0;
-            background: url('https://ai-seedfinder.com/wp-content/uploads/interface.png') no-repeat center center;
-            background-size: cover;
-            opacity: 0.1;
-            z-index: -1;
-            filter: sepia(100%) hue-rotate(100deg);
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, transparent, rgba(0, 255, 136, 0.08), transparent);
+            transform: translateX(-100%);
+            transition: 0.6s;
         }
 
-        .hero-title {
-            font-size: clamp(3rem, 10vw, 6rem);
-            line-height: 0.95;
-            margin-bottom: 20px;
+        .sieve-item:hover::after {
+            transform: translateX(100%);
         }
 
-        .hero-desc {
-            font-size: 1.3rem;
-            color: var(--text-secondary);
-            max-width: 800px;
-            margin: 0 auto 50px;
+        /* --- Project Mission Styles --- */
+        .mission-item {
+            display: flex;
+            gap: 60px;
+            margin-bottom: 120px;
+            align-items: flex-start;
         }
 
-        /* --- Buttons --- */
-        .btn {
-            display: inline-flex;
+        .mission-indicator {
+            display: flex;
+            flex-direction: column;
             align-items: center;
-            padding: 20px 40px;
-            border-radius: 12px;
-            font-weight: 800;
-            text-decoration: none;
-            font-family: 'Outfit', sans-serif;
+            gap: 25px;
+            min-width: 120px;
+        }
+
+        .mission-split {
+            display: flex;
+            gap: 80px;
+            align-items: flex-start;
+            margin-bottom: 100px;
+        }
+
+        .mission-list {
+            flex: 1.2;
+        }
+
+        .mission-image-side {
+            flex: 1;
+            position: sticky;
+            top: 120px;
+        }
+
+        .mission-image-side img {
+            width: 100%;
+            border-radius: 30px;
+            border: 1px solid var(--border);
+            box-shadow: 0 40px 100px rgba(0, 0, 0, 0.6);
+            transition: 0.5s;
+        }
+
+        .mission-image-side img:hover {
+            transform: scale(1.02);
+            border-color: var(--accent);
+        }
+
+        @media (max-width: 1400px) {
+            .mission-split {
+                gap: 40px;
+            }
+        }
+
+        @media (max-width: 1200px) {
+            .mission-split {
+                flex-direction: column;
+            }
+
+            .mission-image-side {
+                position: static;
+                width: 100%;
+                order: -1;
+                margin-bottom: 60px;
+            }
+        }
+
+        .indicator-line {
+            width: 2px;
+            height: 180px;
+            background: linear-gradient(180deg, var(--accent) 0%, transparent 100%);
+            box-shadow: 0 0 20px var(--accent-glow);
+        }
+
+        .indicator-tag {
+            font-family: var(--font-mono);
+            font-size: 0.75rem;
+            color: var(--accent);
+            letter-spacing: 4px;
             text-transform: uppercase;
-            letter-spacing: 0.05em;
-            transition: all 0.3s;
+            writing-mode: vertical-rl;
+            opacity: 0.8;
         }
 
-        .btn-primary {
-            background: var(--primary-emerald);
-            color: #000;
-            box-shadow: 0 10px 40px var(--primary-glow);
-        }
-
-        .btn-primary:hover {
-            transform: translateY(-3px) scale(1.02);
-            box-shadow: 0 20px 60px var(--primary-glow);
-        }
-
-        .btn-outline {
-            border: 2px solid var(--border-muted);
+        .mission-content h3 {
+            font-family: var(--font-heading);
+            font-size: 2.2rem;
             color: #fff;
-            margin-left: 15px;
+            margin-bottom: 25px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
         }
 
-        .btn-outline:hover {
-            background: rgba(255, 255, 255, 0.05);
+        .mission-content p {
+            font-size: 1.2rem;
+            color: #999;
+            line-height: 1.9;
+            max-width: 1000px;
         }
 
-        /* --- Feature Cards & Grids --- */
-        .grid-3 {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
-            gap: 40px;
+        .necropolis-highlight {
+            margin-top: 100px;
+            background: linear-gradient(90deg, rgba(0, 255, 136, 0.05) 0%, transparent 100%);
+            border-left: 2px solid var(--accent);
+            padding: 80px;
+            display: flex;
+            gap: 80px;
+            align-items: center;
         }
 
-        .glass-card {
-            background: var(--bg-surface);
-            border: 1px solid var(--border-muted);
-            padding: 50px;
-            border-radius: 32px;
-            backdrop-filter: var(--glass-blur);
+        .necropolis-text h3 {
+            font-family: var(--font-heading);
+            font-size: 3rem;
+            color: #00ff88;
+            margin-bottom: 30px;
+        }
+
+        .necropolis-text p {
+            font-size: 1.3rem;
+            color: #ccc;
+            line-height: 1.8;
+        }
+
+        .necropolis-img {
+            width: 500px;
+            border-radius: 20px;
+            filter: grayscale(0.8) contrast(1.2);
+            box-shadow: 0 0 50px rgba(0, 0, 0, 0.5);
+        }
+
+        @media (max-width: 1200px) {
+
+            .mission-item,
+            .necropolis-highlight {
+                flex-direction: column;
+                gap: 30px;
+            }
+
+            .necropolis-img {
+                width: 100%;
+            }
+
+            .indicator-line {
+                height: 60px;
+            }
+
+            .indicator-tag {
+                writing-mode: horizontal-tb;
+            }
+        }
+
+        .tier-idx {
+            font-family: var(--font-mono);
+            font-size: 0.75rem;
+            color: var(--accent);
+            margin-bottom: 15px;
+            display: block;
+            text-shadow: 0 0 10px var(--accent-glow);
+            letter-spacing: 2px;
+        }
+
+        .sieve-item h4 {
+            color: #fff;
+            font-size: 1.4rem;
+            margin-bottom: 12px;
+            font-family: var(--font-heading);
             transition: 0.3s;
         }
 
-        .glass-card:hover {
-            border-color: var(--primary-emerald);
-            transform: translateY(-10px);
+        .sieve-item:hover h4 {
+            color: var(--accent);
+            transform: translateZ(40px);
+        }
+
+        .sieve-item p {
+            font-size: 1rem;
+            line-height: 1.5;
+            transition: 0.3s;
+            color: #888;
+        }
+
+        .sieve-item:hover p {
+            color: #ccc;
+        }
+
+        /* --- Math Displays --- */
+        .math-block {
+            background: #000;
+            border: 1px solid var(--border);
+            padding: 40px;
+            border-radius: 24px;
+            margin: 40px 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .math-block::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at center, rgba(0, 255, 136, 0.05), transparent);
+        }
+
+        .math-svg {
+            width: 100%;
+            max-width: 800px;
+            height: auto;
+            filter: drop-shadow(0 0 15px var(--accent-glow));
+            animation: floatMath 6s ease-in-out infinite;
+        }
+
+        @keyframes floatMath {
+
+            0%,
+            100% {
+                transform: translateY(0) rotate(0deg);
+            }
+
+            50% {
+                transform: translateY(-10px) rotate(1deg);
+            }
+        }
+
+        /* --- Scroll to Top --- */
+        #scrollTop {
+            position: fixed;
+            bottom: 40px;
+            right: 40px;
+            width: 60px;
+            height: 60px;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            color: #fff;
+            border-radius: 50%;
+            opacity: 0;
+            visibility: hidden;
+            transition: 0.4s;
+            cursor: pointer;
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            backdrop-filter: blur(10px);
+        }
+
+        #scrollTop.visible {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        #scrollTop:hover {
+            border-color: var(--accent);
+            color: var(--accent);
+            transform: scale(1.1);
+        }
+
+        .card:hover {
+            border-color: var(--accent);
+            transform: translateY(-5px);
+            background: rgba(255, 255, 255, 0.05);
+            cursor: pointer;
+        }
+
+        /* --- Modal System --- */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.95);
+            backdrop-filter: blur(20px);
+            z-index: 5000;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: #0a0a0a;
+            border: 1px solid var(--border);
+            max-width: 800px;
+            width: 100%;
+            padding: 50px;
+            position: relative;
+            border-radius: 30px;
+            box-shadow: 0 0 50px rgba(0, 255, 136, 0.1);
+            animation: modalFade 0.4s cubic-bezier(0.2, 0.8, 0.2, 1);
+        }
+
+        @keyframes modalFade {
+            from {
+                opacity: 0;
+                transform: translateY(30px) scale(0.95);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        .close-modal {
+            position: absolute;
+            top: 30px;
+            right: 30px;
+            font-size: 2rem;
+            color: #555;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .close-modal:hover {
+            color: var(--accent);
+        }
+
+        .modal-body h2 {
+            font-family: var(--font-heading);
+            font-size: 2.5rem;
+            margin-bottom: 25px;
+            background: linear-gradient(90deg, #fff 0%, #888 100%);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .modal-tag {
+            display: inline-block;
+            background: rgba(0, 255, 136, 0.1);
+            color: var(--accent);
+            padding: 5px 15px;
+            border-radius: 5px;
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 20px;
+        }
+
+        .modal-body p {
+            font-size: clamp(0.9rem, 1.2vw, 1.1rem);
+            line-height: 1.7;
+            color: #aaa;
+            margin-bottom: 30px;
+        }
+
+        @media (max-width: 768px) {
+            .modal-content {
+                padding: 30px 20px;
+                border-radius: 20px;
+            }
+
+            .modal-body h2 {
+                font-size: 1.8rem;
+            }
+
+            .modal-tag {
+                font-size: 0.7rem;
+            }
+
+            .close-modal {
+                top: 15px;
+                right: 15px;
+            }
+        }
+
+        .card-header {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            margin-bottom: 20px;
         }
 
         .card-icon {
-            font-size: 3rem;
-            margin-bottom: 30px;
-            display: block;
-            filter: drop-shadow(0 0 15px var(--primary-glow));
+            width: 60px;
+            height: 60px;
+            object-fit: cover;
+            border-radius: 10px;
+            border: 1px solid var(--border);
         }
 
-        .glass-card h3 {
-            font-size: 2rem;
-            margin-bottom: 20px;
-            color: var(--primary-emerald);
-        }
-
-        /* --- Technical Section --- */
-        .tech-box {
-            display: flex;
-            align-items: center;
-            gap: 60px;
-            margin-top: 80px;
-        }
-
-        .tech-text {
-            flex: 1;
-        }
-
-        .tech-visual {
-            flex: 0.8;
-        }
-
-        .tech-image {
+        /* --- Requirements Table --- */
+        .req-table {
             width: 100%;
-            border-radius: 24px;
-            border: 1px solid var(--border-muted);
-            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.5);
-        }
-
-        /* --- Entropy Tiers Table --- */
-        .tier-matrix {
-            margin-top: 80px;
-            border: 1px solid var(--border-muted);
-            border-radius: 24px;
+            border-collapse: collapse;
+            color: var(--text-main);
+            background: rgba(255, 255, 255, 0.02);
+            border-radius: 20px;
             overflow: hidden;
+            border: 1px solid var(--border);
         }
 
-        .tier-row {
-            display: grid;
-            grid-template-columns: 80px 1fr 2fr;
-            padding: 30px;
-            border-bottom: 1px solid var(--border-muted);
-            transition: 0.2s;
-        }
-
-        .tier-row:hover {
-            background: rgba(16, 185, 129, 0.03);
-        }
-
-        .tier-id {
-            font-weight: 900;
-            color: var(--primary-emerald);
-            font-family: 'Outfit', sans-serif;
-        }
-
-        .tier-title {
-            font-weight: 700;
-            color: #fff;
-        }
-
-        .tier-desc {
-            color: var(--text-secondary);
-            font-size: 0.95rem;
-        }
-
-        /* --- Code & Formulas --- */
-        .code-snippet {
-            background: #080808;
+        .req-table th,
+        .req-table td {
             padding: 25px;
-            border-radius: 12px;
-            font-family: 'Fira Code', monospace;
-            font-size: 0.85rem;
-            color: #888;
-            border: 1px solid #111;
-            line-height: 1.5;
+            text-align: left;
+            border-bottom: 1px solid var(--border);
         }
 
-        .keyword {
-            color: var(--accent-crimson);
+        .req-table th {
+            font-family: var(--font-heading);
+            color: var(--accent);
+            text-transform: uppercase;
+            font-size: 0.75rem;
+            letter-spacing: 2px;
+            background: rgba(0, 255, 136, 0.05);
         }
 
-        .function {
-            color: var(--secondary-cyan);
+        .req-table tr:hover {
+            background: rgba(0, 255, 136, 0.03);
         }
 
-        .formula {
-            display: block;
-            padding: 15px;
-            margin: 20px 0;
-            border-left: 3px solid var(--primary-emerald);
-            background: rgba(16, 185, 129, 0.05);
+        .req-table td strong {
+            color: var(--text-white);
+            font-family: var(--font-heading);
+            font-size: 0.9rem;
+        }
+
+        .req-status-y {
+            color: var(--accent);
+        }
+
+        .req-status-w {
             color: #fff;
-            font-size: 1.1rem;
         }
 
-        /* --- Highlights/Blockquotes --- */
-        .philosophy-strip {
-            background: linear-gradient(90deg, #0a0a0a, #161b22, #0a0a0a);
-            padding: 80px 0;
-            text-align: center;
-            border-top: 1px solid var(--border-muted);
-            border-bottom: 1px solid var(--border-muted);
+        @media (max-width: 900px) {
+            .req-table {
+                display: block;
+                overflow-x: auto;
+            }
         }
 
-        .phil-quote {
-            font-size: 2rem;
-            font-weight: 300;
-            font-family: 'Outfit';
-            font-style: italic;
-            max-width: 900px;
-            margin: 0 auto;
-            color: var(--text-primary);
+        /* --- Global Responsive Fixes --- */
+        @media (max-width: 768px) {
+            h1.main-title {
+                font-size: 2.5rem !important;
+            }
+
+            .hero-desc {
+                font-size: 1rem !important;
+                padding: 0 10px;
+            }
+
+            .container {
+                padding: 0 20px;
+            }
         }
 
         /* --- Footer --- */
         footer {
-            padding: 100px 0 60px;
-            background: #020202;
-            border-top: 1px solid var(--border-muted);
+            padding: 80px 0 40px;
+            background: #000;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            position: relative;
+        }
+
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 40px;
         }
 
         .footer-grid {
             display: grid;
-            grid-template-columns: 2fr 1fr 1fr;
-            gap: 80px;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 60px;
+            width: 100%;
         }
 
-        .footer-logo {
-            font-size: 2rem;
-            font-weight: 900;
-            margin-bottom: 30px;
-        }
-
-        .footer-links h4 {
+        .footer-brand h4 {
+            font-family: var(--font-heading);
+            font-size: 1.5rem;
             color: #fff;
-            text-transform: uppercase;
-            font-size: 0.8rem;
-            letter-spacing: 0.1em;
-            margin-bottom: 25px;
+            margin-bottom: 20px;
+            letter-spacing: 1px;
         }
 
-        .footer-links ul {
+        .footer-brand p {
+            color: #555;
+            max-width: 350px;
+            font-size: 0.9rem;
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+
+        .footer-col h5 {
+            color: #fff;
+            font-family: var(--font-heading);
+            font-size: 0.75rem;
+            margin-bottom: 25px;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+
+        .footer-links {
             list-style: none;
-            padding: 0;
         }
 
         .footer-links li {
-            margin-bottom: 15px;
+            margin-bottom: 12px;
         }
 
         .footer-links a {
-            color: var(--text-secondary);
+            color: #666;
             text-decoration: none;
+            font-size: 0.9rem;
             transition: 0.3s;
         }
 
         .footer-links a:hover {
-            color: var(--primary-emerald);
+            color: var(--accent);
         }
 
-        .copyright {
-            text-align: center;
+        .footer-bottom {
             margin-top: 80px;
-            font-size: 0.8rem;
-            color: #444;
-            border-top: 1px solid #111;
-            padding-top: 40px;
+            padding-top: 60px;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 30px;
         }
 
-        /* --- Responsive --- */
-        @media (max-width: 900px) {
-            .grid-3 {
-                grid-template-columns: 1fr;
+        .footer-credits {
+            font-family: var(--font-heading);
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: #fff;
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            text-align: center;
+            background: linear-gradient(90deg, #444 0%, #fff 50%, #444 100%);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0 0 30px rgba(255, 255, 255, 0.1);
+        }
+
+        @media (max-width: 1100px) {
+            .sieve-grid {
+                grid-template-columns: repeat(2, 1fr);
             }
 
-            .tech-box {
-                flex-direction: column;
-                text-align: center;
+            .nav-inner {
+                padding: 0 30px;
             }
+        }
 
-            .tier-row {
-                grid-template-columns: 1fr;
-                gap: 10px;
-            }
-
-            .hero-title {
-                font-size: 4rem;
-            }
-
-            .nav-links {
+        @media (max-width: 760px) {
+            .nav-status {
                 display: none;
             }
+
+            .sieve-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .bento .card {
+                grid-column: span 12 !important;
+            }
+
+            .section-header {
+                font-size: 2.5rem;
+            }
+        }
+
+        /* --- Technical Detail Styling --- */
+        .detail-text {
+            color: #ccc;
+            font-size: 0.95rem;
+            line-height: 1.7;
+        }
+
+        .detail-text p {
+            margin-bottom: 20px;
+        }
+
+        .section-label {
+            display: block;
+            color: var(--accent);
+            font-family: var(--font-heading);
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-top: 30px;
+            margin-bottom: 12px;
+            border-bottom: 1px solid rgba(0, 255, 136, 0.1);
+            padding-bottom: 5px;
+        }
+
+        .formula-block {
+            background: rgba(0, 255, 136, 0.03);
+            border: 1px solid rgba(0, 255, 136, 0.1);
+            border-left: 3px solid var(--accent);
+            padding: 20px;
+            margin: 20px 0;
+            font-family: var(--font-mono);
+            color: #fff;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            position: relative;
+            box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .formula-block::before {
+            content: 'MATH_LOGIC';
+            position: absolute;
+            top: -10px;
+            right: 15px;
+            background: #000;
+            padding: 0 10px;
+            font-size: 0.6rem;
+            color: var(--accent);
+            letter-spacing: 1px;
+            border: 1px solid rgba(0, 255, 136, 0.1);
+            border-radius: 4px;
+        }
+
+        .detail-text strong {
+            color: #fff;
+        }
+
+        .reveal {
+            opacity: 0;
+            transform: translateY(40px);
+            transition: 1.2s cubic-bezier(0.2, 1, 0.3, 1);
+        }
+
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
         }
     </style>
 </head>
 
 <body>
+    <div id="scroll-progress"></div>
+    <div id="cursor-glow"></div>
 
     <nav>
-        <div class="container nav-inner">
-            <div class="logo">BIT<span>RESURRECTOR</span></div>
-            <div class="nav-links">
-                <a href="#philosophy">Philosophy</a>
-                <a href="#engine">Sniper Engine</a>
-                <a href="#sieve">The Sieve</a>
-                <a href="#gpu">GPU Scaling</a>
-                <a href="#contact">Recovery Path</a>
+        <div class="nav-inner">
+            <a href="#" class="logo-group">
+                <img src="assets/img/bitresurrector_logo.png"
+                    onerror="this.src='assets/img/app_icon.ico'; this.onerror=null;" alt="bitResurrector"
+                    class="logo-img">
+                <span class="logo-name">bitResurrector</span>
+            </a>
+
+            <ul class="nav-links">
+                <li><a href="#philosophy">Mission</a></li>
+                <li><a href="#kernel">Turbo Core</a></li>
+                <li><a href="#sieve">Entropy Filter</a></li>
+                <li><a href="#targeting">Infrastructure</a></li>
+                <li><a href="#requirements">Specs</a></li>
+            </ul>
+
+            <div class="nav-actions">
+                <a href="https://github.com/leadzevs/bitResurrector/blob/main/WHITE_PAPER.md"
+                    class="nav-btn-ghost">Documentation</a>
+                <a href="https://github.com/leadzevs/bitResurrector/releases" class="btn-premium"
+                    style="padding: 10px 25px; font-size: 0.75rem; border-radius: 4px;">Download</a>
             </div>
-            <a href="https://github.com/leadzevs/bitResurrector/" class="btn btn-primary"
-                style="padding: 10px 20px; font-size: 0.7rem;">Download Suite</a>
+
+            <button class="menu-toggle" aria-label="Toggle Menu">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
         </div>
     </nav>
 
     <header class="hero">
-        <div class="container">
-            <h1 class="hero-title">RECLAIM THE <br><span class="gradient-text">DIGITAL NECROPOLIS</span></h1>
-            <p class="hero-desc">The industry's most advanced software suite for the forensic recovery of abandoned
-                Bitcoin assets from the secp256k1 scalar field.</p>
-            <div class="cta">
-                <a href="https://github.com/leadzevs/bitResurrector/" class="btn btn-primary">Download Current
-                    Release</a>
-                <a href="#engine" class="btn btn-outline">Explore Implementation</a>
+        <canvas id="hero-canvas"></canvas>
+        <h1 class="main-title scramble" data-value="BITRESURRECTOR"></h1>
+        <p class="hero-desc">Free software for high-speed blockchain vulnerability analysis. BitResurrector generates
+            private keys to search for collisions with addresses with positive balances, using a local Bloom filter to
+            instantly match each attempt against a global database of active Bitcoins.</p>
+
+        <div class="img-card reveal" style="max-width: 1550px;">
+            <img src="assets/img/interface-proof.png" alt="Software interface - BitResurrector GUI">
+        </div>
+
+        <div class="download-pod reveal" style="max-width: 750px; width: 100%; gap: 40px;">
+            <div class="pod-info" style="text-align: left; flex: 1;">
+                <h4
+                    style="color: #fff; font-family: var(--font-heading); margin-bottom: 8px; font-size: 1.2rem; letter-spacing: 1px;">
+                    bitResurrector</h4>
+                <div class="pod-hash"
+                    style="color: #666; font-size: 0.65rem; line-height: 1.4; word-break: break-all; opacity: 0.7;">
+                    SHA-256: 0ed85ec082a546220f33dbb97c59f8a4fc054121bced70001f4b53d68846abad
+                </div>
             </div>
+            <a href="https://github.com/leadzevs/bitResurrector/releases/download/v3.0.3/bitResurrector_v3.0.3_Setup.exe"
+                class="btn-premium" style="border-radius: 50px; padding: 20px 60px; flex-shrink: 0;">Download</a>
         </div>
     </header>
 
-    <section id="philosophy">
-        <div class="container">
-            <div class="section-heading" style="text-align: center; margin-bottom: 100px;">
-                <h2 style="font-size: 3.5rem;">Digital Archaeology.</h2>
-                <p style="color: var(--text-secondary);">Addressing the 4 million BTC frozen in early-era wallets
-                    (2009–2015).</p>
-            </div>
-            <div class="grid-3">
-                <div class="glass-card">
-                    <span class="card-icon">⚖️</span>
-                    <h3>Financial Justice</h3>
-                    <p>Every found private key is a direct realization of personal benefit. We believe access to
-                        "digital treasure" hunting shouldn't be a privilege of a narrow circle—it should be available to
-                        everyone through forensic capital recovery.</p>
-                </div>
-                <div class="glass-card">
-                    <span class="card-icon">⚡</span>
-                    <h3>Liquidity Resurrection</h3>
-                    <p>By returning dormant coins to circulation, users act as network "resuscitators." Every successful
-                        transaction saturates the global market with liquidity, making Bitcoin a more functional
-                        financial instrument.</p>
-                </div>
-                <div class="glass-card">
-                    <span class="card-icon">🔬</span>
-                    <h3>Technological Audit</h3>
-                    <p>BitResurrector is a challenge to cryptographic dogmas. We prove that current protection is not
-                        absolute by auditing historical PRNG weaknesses, signaling the need for quantum-resistant
-                        storage standards.</p>
-                </div>
-            </div>
-        </div>
-    </section>
+    <div class="container">
+        <section id="philosophy" class="section-wrap">
+            <h2 class="section-header reveal">Project Mission</h2>
+            <div class="container">
+                <div class="mission-split">
+                    <div class="mission-list">
+                        <!-- Mission Objective 1 -->
+                        <div class="mission-item reveal">
+                            <div class="mission-indicator">
+                                <div class="indicator-line"></div>
+                                <span class="indicator-tag">Objective 01</span>
+                            </div>
+                            <div class="mission-content">
+                                <h3>Personal capital and financial justice</h3>
+                                <p>The main incentive for every user is their direct personal benefit. The program
+                                    allows anyone
+                                    to use their PC resources to search for and recover abandoned Bitcoin wallets that
+                                    have been
+                                    considered lost for years. Finding the private key to such an address allows the
+                                    user to
+                                    transfer previously inaccessible funds to their accounts, instantly changing their
+                                    financial
+                                    status. We believe that access to "digital treasure" hunting technologies should not
+                                    be a
+                                    privilege for a narrow circle of people—it should be available to everyone.</p>
+                            </div>
+                        </div>
 
-    <div class="philosophy-strip">
-        <div class="container">
-            <p class="phil-quote">"The 77-digit shield is not an absolute constant in a world of growing computational
-                entropy. If a sequence was generated once, it can, by definition, be reproduced again."</p>
-        </div>
+                        <!-- Mission Objective 2 -->
+                        <div class="mission-item reveal">
+                            <div class="mission-indicator">
+                                <div class="indicator-line"></div>
+                                <span class="indicator-tag">Objective 02</span>
+                            </div>
+                            <div class="mission-content">
+                                <h3>Resurrection of abandoned coins</h3>
+                                <p>About 4 million BTC are permanently locked in early-era wallets (2009–2015), creating
+                                    an
+                                    artificial deficit and limiting ecosystem development. By returning these coins to
+                                    active
+                                    circulation, BitResurrector users act as network "resuscitators." Every successful
+                                    transaction from a previously forgotten wallet saturates the market with liquidity
+                                    and makes
+                                    Bitcoin a more vibrant and functional financial instrument for the entire global
+                                    community.
+                                </p>
+                            </div>
+                        </div>
+
+                        <!-- Mission Objective 3 -->
+                        <div class="mission-item reveal" style="margin-bottom: 0;">
+                            <div class="mission-indicator">
+                                <div class="indicator-line"></div>
+                                <span class="indicator-tag">Objective 03</span>
+                            </div>
+                            <div class="mission-content">
+                                <h3>Technological audit and a challenge to humanity</h3>
+                                <p>BitResurrector is a large-scale project to refute the strength of cryptography
+                                    foundations.
+                                    Distributing the program for free allows us to prove that current Bitcoin protection
+                                    is not
+                                    absolute. We present humanity with a fact: if private keys can be reproduced, then
+                                    current
+                                    security standards need revision. The success of our project is a signal to the
+                                    global
+                                    industry that it is time to think about creating more advanced, quantum-resistant,
+                                    and truly
+                                    secure systems for storing financial values in digital form.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mission-image-side reveal">
+                        <img src="assets/img/bitresurrector_manifesto_v4_3d.jpg"
+                            alt="BitResurrector Project Mission and Goals">
+                    </div>
+                </div>
+
+                <!-- Necropolis Highlight -->
+                <div class="necropolis-highlight reveal">
+                    <div class="necropolis-text">
+                        <h3>Digital Necropolis: 4 Million dormant BTC</h3>
+                        <p>Approximately 20% of the total Bitcoin supply remains untouched in addresses for over a
+                            decade. BitResurrector transforms your hardware into a high-performance search node focused
+                            on this "Digital Graveyard," mapping industrial-grade search geometry against these static
+                            targets. By matching generated keys in O(1) complexity, the system enables a systematic
+                            search for collisions, providing the tools needed to reclaim the world's most valuable
+                            abandoned assets.</p>
+                    </div>
+                    <img src="assets/img/bitcoin_necropolis.png" class="necropolis-img"
+                        alt="Digital Necropolis - recovering abandoned Bitcoin assets from the digital graveyard">
+                </div>
+            </div>
+        </section>
+
+        <section id="myth-buster" class="section-wrap">
+            <h2 class="section-header reveal">The Myth of "Absolute" Impossibility</h2>
+            <div class="bento">
+                <div class="card reveal" style="grid-column: span 12;">
+                    <h3>Math defies prohibitions</h3>
+                    <p>Skeptics often cite the 2^256 search space as an infinite barrier. However, mathematics knows no
+                        ownership. In the secp256k1 field, every random generation is a collision possibility. When a
+                        "rich wallet" was first initialized years ago, it was merely the result of a stochastic point
+                        generation. Any subsequent generation today—on your hardware—occupies the <strong>exact same
+                            class</strong> of random events. If it happened once, it is factually achievable again. We
+                        simply accelerate that eventuality.</p>
+                </div>
+                <div class="img-card reveal" style="grid-column: span 12; margin-top: 30px;">
+                    <img src="assets/img/bitresurrector_math_of_equality_true_comic.jpg"
+                        alt="The Principle of Random Equality illustration - Mining Farm vs Home PC">
+                </div>
+            </div>
+        </section>
+
+        <section id="kernel" class="section-wrap">
+            <h2 class="section-header reveal">Turbo Core Kernel</h2>
+            <div class="bento">
+                <div class="card reveal" style="grid-column: span 7;">
+                    <p>At the heart of BitResurrector lies an industrial-grade C++ kernel optimized for massive
+                        instruction-level parallelism. By shifting from legacy modular division (DIV) to Montgomery
+                        Modular Multiplication (REDC) and utilizing AVX-512 bit-slicing, the engine achieves a 85%
+                        reduction in latency per scalar generation. We transpose independent internal states across ZMM
+                        registers, effectively saturating the silicon limits of modern hardware to ensure maximum
+                        throughput across all operational profiles.</p>
+
+                    <div class="perf-box">
+                        <div class="perf-row standard">
+                            <div class="perf-label">
+                                <span>Standard CPU Thread</span>
+                                <span>~3,750 Keys/s</span>
+                            </div>
+                            <div class="perf-bar-bg">
+                                <div class="perf-bar-fill" style="width: 6.25%;"></div>
+                            </div>
+                        </div>
+                        <div class="perf-row">
+                            <div class="perf-label">
+                                <span>Sniper Engine / Turbo-Core (AVX-512)</span>
+                                <span>60,000 Keys/s</span>
+                            </div>
+                            <div class="perf-bar-bg">
+                                <div class="perf-bar-fill" style="width: 100%;"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="math-block">
+                        <svg class="math-svg" viewBox="0 0 1000 120">
+                            <defs>
+                                <linearGradient id="grad1" x1="0%" y1="0%" x2="100%" y2="0%">
+                                    <stop offset="0%" style="stop-color:#00ff88;stop-opacity:1" />
+                                    <stop offset="100%" style="stop-color:#00bdff;stop-opacity:1" />
+                                </linearGradient>
+                            </defs>
+                            <text x="50%" y="45" text-anchor="middle" fill="url(#grad1)" font-family="monospace"
+                                font-size="22" font-weight="bold">REDC(T) = (T + (T · m' mod R) · n) / R</text>
+                            <text x="50%" y="85" text-anchor="middle" fill="#555" font-family="monospace"
+                                font-size="14">Turbo Core Logic: Montgomery Modular Multiplication (CPU REDC
+                                Kernel)</text>
+                        </svg>
+                    </div>
+                </div>
+                <div class="card reveal"
+                    style="grid-column: span 5; padding: 20px; display: flex; align-items: center;">
+                    <img src="assets/img/bitresurrector_turbo_core_tech_set2.jpg"
+                        style="width: 100%; border-radius: 20px;"
+                        alt="BitResurrector Engine Architecture and Entropy Segregation">
+                </div>
+            </div>
+        </section>
+
+        <section id="sieve" class="section-wrap">
+            <h2 class="section-header reveal">Intelligent Entropy Filter</h2>
+            <p style="margin-bottom: 60px; max-width: 900px; font-size: 1.2rem; line-height: 1.8;">
+                The BitResurrector v3.0 software complex implements a multi-level "Intelligent Entropy Filter"
+                system functioning as a high-speed separator. Instead of inefficient brute force, the system
+                subjects every generated scalar to deep statistical expertise across <strong>nine independent
+                    verification stages</strong>, guaranteeing that computational resources will not be wasted
+                on mathematically degraded sequences.</p>
+
+            <div class="img-card reveal" style="margin-bottom: 80px;">
+                <img src="assets/img/entropy_filtration_flowchart_v1_1769366935548.jpg"
+                    alt="BitResurrector Engine Scheme - Entropy Segregation Logic">
+            </div>
+
+            <div class="sieve-grid">
+                <!-- Filter 01 -->
+                <div class="sieve-item reveal">
+                    <h4>Frequency Analysis of Binary Density (Monobit Test)</h4>
+                    <p>Primary Hamming Weight evaluation targeting the central tendency of the binomial distribution
+                        [110–146].</p>
+                    <div class="sieve-details">
+                        <div class="detail-text">
+                            <p>The primary filtration barrier performs a Hamming Weight evaluation for the 256-bit
+                                scalar. This check is a direct implementation of the Frequent (Monobit) test, regulated
+                                by the international NIST SP 800-22 specification. In a perfectly random key, the number
+                                of set bits (ones) must correspond to the central tendency of the binomial distribution.
+                            </p>
+
+                            <span class="section-label">Statistical Model</span>
+                            <p>The mathematical expectation M(W) of the number of unit bits in a vector of length n =
+                                256 with probability p = 0.5 is 128. The standard deviation (σ) is calculated by the
+                                formula:</p>
+                            <div class="formula-block">σ = √(n · p · (1 - p)) = 8</div>
+                            <p>According to the bitResurrector specification, the filter's operating range is set within
+                                [110, 146], which corresponds to the interval M(W) ± 2.25σ. Statistically, 97.6% of all
+                                truly random keys fall into this corridor. Generated sequences exceeding these precision
+                                boundaries are marked as defective.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Filter 02 -->
+                <div class="sieve-item reveal">
+                    <h4>Numerical Gravity and Decimal Range 10^76</h4>
+                    <p>Subspace optimization focusing on the area of maximum information density used by professional
+                        wallets.</p>
+                    <div class="sieve-details">
+                        <div class="detail-text">
+                            <p>Since the group order n is a 77-digit number, modern standards are oriented towards
+                                generating keys of exactly this bit depth. The bitResurrector algorithm implements a
+                                strict condition:</p>
+                            <div class="formula-block">10^76 ≤ k < 10^77</div>
+                                    <p>This range covers approximately 78.2% of the theoretical scalar field. From a
+                                        systems engineering perspective, this is a narrowing of the search to the "elite
+                                        sector" of the mathematical mass. By cutting off short keys and low-complexity
+                                        passphrases, the system concentrates on the high-entropy subspace used by modern
+                                        wallets (Electrum, Bitcoin Core) during standard BIP32/BIP39 generation.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Filter 03 -->
+                    <div class="sieve-item reveal">
+                        <h4>Combinatorial Diversity of Decimal Alphabet</h4>
+                        <p>Spectral audit of unique decimal digits to identify primitive PRNGs or human-created
+                            patterns.</p>
+                        <div class="sieve-details">
+                            <div class="detail-text">
+                                <p>For each scalar, an analysis of the spectral diversity of decimal digits is
+                                    performed. The probability that a 77-digit number will contain a limited set of
+                                    unique digits from the alphabet ∑ = {0, 1, ..., 9}, is described through the
+                                    distribution of unique symbols.</p>
+
+                                <span class="section-label">Confidence Threshold</span>
+                                <p>A key is recognized as valid only if there are 9 or more unique decimal digits. The
+                                    probability that a truly random key will contain fewer than 9 digits is only 1.24 ·
+                                    10⁻¹¹. Such a strict threshold allows instantly identifying keys generated by
+                                    primitive PRNGs with a short period or deterministic "patterns" created by a human.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Filter 04 -->
+                    <div class="sieve-item reveal">
+                        <h4>Serial Analysis of Repetitions (Runs Test) in the Decimal Layer</h4>
+                        <p>Identification of structural determinism via asymptotic estimation of decimal run
+                            probabilities.</p>
+                        <div class="sieve-details">
+                            <div class="detail-text">
+                                <p>Mechanism designed to detect anomalous repetitions of identical decimal digits.
+                                    According to probability theory, the average length of the maximum run in a random
+                                    decimal string is extremely small.</p>
+
+                                <span class="section-label">Probability Estimation</span>
+                                <p>The asymptotic estimate of the probability of a run of length k = 7 appearing in a
+                                    string of length L = 77 is calculated as:</p>
+                                <div class="formula-block">P(Run ≥ k) ≈ (L - k + 1) · (1/10)^k</div>
+                                <p>For k = 7, the value P ≈ 0.0000071. bitResurrector blocks any keys containing a run
+                                    of 7 or more identical digits in a row (e.g., "0000000"), which serves as a fatal
+                                    marker of structural determinism.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Filter 05 -->
+                    <div class="sieve-item reveal">
+                        <h4>Metric Evaluation of Information Entropy by Shannon</h4>
+                        <p>Measurement of "unpredictability" via Claude Shannon's classical formula for distribution
+                            relationships.</p>
+                        <div class="sieve-details">
+                            <div class="detail-text">
+                                <p>The central analytical node measures the "unpredictability" of the key's decimal
+                                    representation using Claude Shannon's classical formula:</p>
+                                <div class="formula-block">H(X) = - Σ P(x) · log₂(P(x))</div>
+                                <p>For an ideally distributed 77-digit number, the entropy indicator tends to the
+                                    maximum H ≈ 3.322 bits per symbol. BitResurrector v3.0 sets a critical threshold H ≥
+                                    3.10. Mathematically, this means that a value below 3.10 lies in a zone of deep data
+                                    degradation (8+ standard deviations from normal). Unlike primitive frequency tests,
+                                    this metrics evaluates the distributional relationships of all ten characters
+                                    simultaneously.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Filter 06 -->
+                    <div class="sieve-item reveal">
+                        <h4>Binary Series (Longest Run Test)</h4>
+                        <p>Implementation of the Longest Run of Ones test per NIST SP 800-22 to detect bit-sticking
+                            artifacts.</p>
+                        <div class="sieve-details">
+                            <div class="detail-text">
+                                <p>Implementation of the Longest Run of Ones test of the NIST SP 800-22 standard. In a
+                                    256-bit binary stream, the average expected length of the maximum run of identical
+                                    bits is about 8 units.</p>
+
+                                <span class="section-label">Mathematical Justification</span>
+                                <div class="formula-block">
+                                    E[Lmax] ≈ log2(n × p) = 7-8 bits<br>
+                                    P(Lmax ≥ 17) ≈ 0.00097
+                                </div>
+                                <p>BitResurrector blocks any keys containing a run of 17 or more identical bits in a
+                                    row. This allows effectively cutting off keys with signs of "stuck" hardware data
+                                    buses, characteristic of defective USB generators. Keys exceeding the binary
+                                    threshold are marked by the system as Sequential Entropy Collapse.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Filter 07 -->
+                    <div class="sieve-item reveal">
+                        <h4>Differential Analysis of Hexadecimal Cyclicity</h4>
+                        <p>Identification of repetition patterns in hexadecimal scalar space to detect raw memory
+                            artifacts.</p>
+                        <div class="sieve-details">
+                            <div class="detail-text">
+                                <p>Specializes in identifying repetition patterns in hexadecimal scalar space (64
+                                    nibbles). This stage is critical for detecting raw memory artifacts, fixed
+                                    initialization patterns, and alignment errors.</p>
+
+                                <span class="section-label">Statistical Boundary</span>
+                                <p>The maximum allowable run of identical HEX symbols is limited to five units. The
+                                    appearance of a run of 6 characters (e.g., 0xFFFFFF) is statistically unlikely:</p>
+                                <div class="formula-block">P(Run ≥ 6) ≈ (64 - 6 + 1) × (1/16)⁶ ≈ 3.51 × 10⁻⁶</div>
+                                <p>Such micro-anomalies point to memory alignment artifacts (Memory Padding) and the
+                                    program ruthlessly removes them from the processing queue.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Filter 08 -->
+                    <div class="sieve-item reveal">
+                        <h4>Spectral Diversity of HEX Alphabet (Unique Nibbles)</h4>
+                        <p>Audit of unique character count in 64-bit hex representation to identify spectral bias and
+                            compromise.</p>
+                        <div class="sieve-details">
+                            <div class="detail-text">
+                                <p>Implements a minimum unique character count check in a 64-bit hexadecimal
+                                    representation of a scalar. This mechanism is aimed at identifying "spectral bias"
+                                    that occurs when running flawed PRNGs or as a result of state compromise
+                                    cryptographic attacks.</p>
+
+                                <span class="section-label">Probabilistic Value</span>
+                                <p>For perfectly random data, the expected value of the number of unique HEX characters
+                                    is ≈ 15.75. The probability that such a string will contain "fewer than 13 unique
+                                    characters" is:</p>
+                                <div class="formula-block">P(k < 13) ≈ Σ P(X=i) ≈ 1.34 × 10⁻¹¹</div>
+                                        <p>A drop in the indicator to 12 and below is direct proof that the generation
+                                            algorithm has "blind spots" in its phase space.</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Filter 09 -->
+                        <div class="sieve-item reveal">
+                            <h4>Metric of Byte Diversity</h4>
+                            <p>Analysis of 32-byte structure according to AIS 31 standard to detect extreme byte
+                                collapse.</p>
+                            <div class="sieve-details">
+                                <div class="detail-text">
+                                    <p>Final segregation level analyzes the 32-byte structure of the key according to
+                                        the international AIS 31 standard. A high-quality key must demonstrate a high
+                                        degree of sparsity at the level of full bytes (0–255).</p>
+
+                                    <span class="section-label">Threshold Analysis</span>
+                                    <p>Mathematical expectation E[U] ≈ 30.12. BitResurrector sets a threshold of minimum
+                                        20 unique bytes out of 32 possible.</p>
+                                    <div class="formula-block">P(U < 20) < 10⁻¹⁶</div>
+                                            <p>A drop below 20 indicates an extreme "byte collapse" of entropy. Such a
+                                                key is not a product of cryptography; it is a mathematical corpse not
+                                                worth your equipment's time.</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+        </section>
+
+        <section id="bloom" class="section-wrap">
+            <h2 class="section-header reveal">O(1) Verification</h2>
+            <div class="bento">
+                <div class="card reveal"
+                    style="grid-column: span 5; padding: 0; background: transparent; display: flex; align-items: flex-start;">
+                    <img src="assets/img/bloom_filter_logic.jpg"
+                        style="width: 100%; border-radius: 30px; border: 1px solid var(--border);"
+                        alt="Detailed Architecture Diagram of BitResurrector Bloom Filter Implementation">
+                </div>
+                <div class="card reveal" style="grid-column: span 7;">
+                    <h3>The Bloom Atlas</h3>
+                    <p>To eliminate disk I/O bottlenecks, BitResurrector compresses 58 million active targets into a
+                        multi-layer <strong>Bloom Filter Matrix</strong>. Using memory-mapped files (mmap), the entire
+                        atlas is projected directly into RAM, allowing for <strong>O(1) complexity</strong> lookups.</p>
+
+                    <p style="margin-top: 15px;">Every scalar produced by the Sniper Engine is instantly
+                        cross-referenced against this probabilistic index. This architecture enables millions of
+                        verifications per second with a theoretical false positive rate (FPR) of nearly zero, ensured by
+                        independent hashing functions.</p>
+
+                    <div class="math-block" style="background: transparent; border: none; padding: 20px;">
+                        <svg class="math-svg" viewBox="0 0 500 100">
+                            <text x="50%" y="50" text-anchor="middle" fill="var(--accent)" font-family="monospace"
+                                font-size="24" font-weight="bold">P ≈ (1 - e^(-kn/m))^k</text>
+                            <text x="50%" y="80" text-anchor="middle" fill="#555" font-family="monospace"
+                                font-size="12">False Positive Rate (FPR) Calculation</text>
+                        </svg>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="gpu" class="section-wrap">
+            <h2 class="section-header reveal">Stochastic GPU Geometry</h2>
+            <div class="bento">
+                <div class="card reveal" style="grid-column: span 6;">
+                    <h3>"Random Bites" Strategy</h3>
+                    <p>Linear scanning of the 2^256 space is statistically futile. BitResurrector utilizes a stochastic
+                        search geometry on NVIDIA CUDA known as the <strong>Kangoo Jumps</strong> method. The
+                        architecture is designed for massive scalability across all hardware tiers: for example, a
+                        high-performance card like the <strong>RTX 4090</strong> can easily demonstrate throughput of
+                        <strong>333.3M Keys/s</strong>, maximizing collision probability with industrial-grade precision
+                        on any compatible GPU.
+                    </p>
+                    <div class="img-card" style="margin-top: 30px;">
+                        <img src="assets/img/gpu_kangoo_jumps_final.jpg"
+                            alt="BitResurrector GPU Accelerator Mode Settings Interface">
+                    </div>
+                </div>
+                <div class="card reveal" style="grid-column: span 6;">
+                    <h3>Thermodynamic Duty</h3>
+                    <p>To preserve industrial longevity of your hardware, the Sniper Engine employs a proprietary
+                        <strong>45/30 Thermal Cycle</strong>. The system operates at 100% vector saturation for 45
+                        seconds,
+                        followed by a mandatory 30-second "cool-down" phase.
+                    </p>
+                    <p
+                        style="margin-top: 15px; color: var(--accent); font-family: var(--font-mono); font-size: 0.85rem;">
+                        [SENSOR_LOG]: Adaptive cycle active. Intelligence will trigger earlier restart only if T_die <
+                            65°C. </p>
+                            <p style="margin-top: 10px;">This hardware-aware approach prevents VRM thermal fatigue and
+                                electromigration during 24/7 autonomous recovery operations.</p>
+                            <div class="img-card" style="margin-top: 30px;">
+                                <img src="assets/img/bitresurrector_gpu_dynamic_3panel_v1.jpg"
+                                    alt="BitResurrector Interface showing Turbo Core Mode Activation">
+                            </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="targeting" class="section-wrap">
+            <h2 class="section-header reveal">Operational Architecture</h2>
+            <div class="bento">
+                <div class="card reveal" style="grid-column: span 12; margin-bottom: 30px;">
+                    <p>BitResurrector operates as a high-precision extraction environment. The system orchestrates three
+                        specialized execution profiles to maximize entropy coverage and ensure 100% verification
+                        accuracy against the secp256k1 field.</p>
+                </div>
+
+                <div class="card reveal" style="grid-column: span 4;">
+                    <div class="card-header">
+                        <h3>Sniper</h3>
+                    </div>
+                    <p><strong>Offline Logic Hub.</strong> High-speed local audit using an O(1) Bloom Filter against a
+                        58M address database. Optimized for maximum private key generation throughput on AVX-512 and
+                        CUDA architectures.</p>
+                </div>
+                <div class="card reveal" style="grid-column: span 4;">
+                    <div class="card-header">
+                        <h3>API Global</h3>
+                    </div>
+                    <p><strong>Multi-Standard Verification.</strong> Simultaneous checks across Legacy (1), P2SH (3),
+                        and Bech32 (bc1) formats via distributed node clusters. Ensures real-time balance discovery with
+                        zero false negatives.</p>
+                </div>
+                <div class="card reveal" style="grid-column: span 4;">
+                    <div class="card-header">
+                        <h3>Puzzle Solver</h3>
+                    </div>
+                    <p><strong>Targeted Range Scouting.</strong> Strategic extraction within specific bit-ranges (71-bit
+                        to 160-bit). Designed for solving cryptographic puzzle transactions from
+                        <code>btcpuzzle.info</code> with mathematical precision.
+                    </p>
+                </div>
+
+
+            </div>
+        </section>
+
+        <section id="download" class="section-wrap" style="text-align: center;">
+            <div class="container reveal">
+                <h2 style="font-family: var(--font-heading); font-size: 4rem; color: #fff; margin-bottom: 20px;">STABLE
+                    RELEASE</h2>
+                <p style="margin-bottom: 60px; font-size: 1.2rem;">Stable x64 release build. Full compatibility across
+                    Windows 7, 8, 10, and 11 environments.</p>
+                <a href="https://github.com/leadzevs/bitResurrector/releases/download/v3.0.3/bitResurrector_v3.0.3_Setup.exe"
+                    class="btn-premium" style="font-size: 1.5rem; padding: 30px 80px; border-radius: 80px;">DIRECT
+                    DOWNLOAD</a>
+            </div>
+        </section>
+
+        <section id="requirements" class="section-wrap">
+            <h2 class="section-header reveal">System Specifications</h2>
+            <div class="card reveal" style="padding: 0; background: transparent; border: none;">
+                <table class="req-table">
+                    <thead>
+                        <tr>
+                            <th>Hardware Component</th>
+                            <th>Min requirements (Stable search)</th>
+                            <th>Recommended (High performance)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Processor (CPU)</strong></td>
+                            <td class="req-status-w">Intel/AMD with AVX2 Support</td>
+                            <td class="req-status-y">AVX-512 + BMI2 (Turbo Core enabled)</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Memory (RAM)</strong></td>
+                            <td class="req-status-w">4 GB (mmap minimal resident set)</td>
+                            <td class="req-status-y">16 GB (Full Bloom Matrix residency)</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Video Card (GPU)</strong></td>
+                            <td class="req-status-w">CUDA Compute 3.5+ / OpenCL 1.2</td>
+                            <td class="req-status-y">NVIDIA RTX 30+ (Compute 8.6+)</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Storage Drive</strong></td>
+                            <td class="req-status-w">Any HDD (Index Swap enabled)</td>
+                            <td class="req-status-y">NVMe SSD (Ultra-low page faults)</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Operating System</strong></td>
+                            <td class="req-status-w">Windows 10/11 x64</td>
+                            <td class="req-status-y">Windows Server / 10 / 11 x64</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Access Rights</strong></td>
+                            <td class="req-status-w">Administrator (Direct GPU Access)</td>
+                            <td class="req-status-y">Administrator Permission</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
     </div>
 
-    <section id="engine">
-        <div class="container">
-            <div class="tech-box">
-                <div class="tech-text">
-                    <h2 class="gradient-text" style="font-size: 3rem;">Sniper Engine v3.37</h2>
-                    <p>The technical viability of bitResurrector is based on our industrial kernel written in C++ with
-                        extreme optimization for AVX-512 and CUDA architectures.</p>
-
-                    <h3>Montgomery Modular Transformation</h3>
-                    <p>Standard modular reduction (DIV) is a blocking operation requiring 80+ cycles. Sniper Engine
-                        implements <strong>Montgomery REDC</strong>, replacing division with single-cycle bit shifts and
-                        masks.</p>
-                    <div class="formula">REDC(T) = (T + (T · m' mod R) · n) / R</div>
-                    <p style="font-size: 0.9rem; color: var(--text-secondary);">Eliminating the DIV instruction frees up
-                        more than 85% of computational cycles, making a home PC equivalent to a specialized computing
-                        farm.</p>
-                </div>
-                <div class="tech-visual">
-                    <img src="https://ai-seedfinder.com/wp-content/uploads/Figure_10_Bloom_Architecture_Detailed.jpg"
-                        alt="Sniper Engine Architecture" class="tech-image">
-                </div>
-            </div>
-
-            <div class="tech-box" style="margin-top: 100px; flex-direction: row-reverse;">
-                <div class="tech-text">
-                    <h2 class="gradient-text" style="font-size: 3rem;">AVX-512 Bit-Slicing</h2>
-                    <p>Modern CPUs with 512-bit ZMM registers are treated as a vertical bit matrix. We transponse 16
-                        independent 256-bit numbers, allowing a single CPU instruction to process 16 objects
-                        simultaneously.</p>
-
-                    <h3>Bloom Filter O(1) Verification</h3>
-                    <p>To break the I/O bottleneck, we pack 58 million active targets into a 300MB probabilistic index.
-                        Memory-mapped files (mmap) project this atlas directly into RAM for instant lookup.</p>
-                    <div class="formula">False Positive Rate: P ≈ (1 - e^(-kn/m))^k</div>
-                    <p style="font-size: 0.9rem; color: var(--text-secondary);">With m=2.15B and n=58M, our FPR is
-                        0.28%, cutting off 99.72% of "empty" keys instantly at L3 cache level.</p>
-                </div>
-                <div class="tech-visual">
-                    <img src="https://ai-seedfinder.com/wp-content/uploads/bitresurrector_bloom_filter_comic-1.jpg"
-                        alt="Bloom Filter Tech" class="tech-image">
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <section id="sieve">
-        <div class="container">
-            <div style="text-align: center; margin-bottom: 60px;">
-                <h2 style="font-size: 3.5rem;">The Intelligent Entropy Sieve.</h2>
-                <p style="color: var(--text-secondary);">Every scalar is subjected to deep statistical expertise across
-                    9 independent echelons.</p>
-            </div>
-
-            <div class="tier-matrix">
-                <div class="tier-row">
-                    <div class="tier-id">01 / HIST</div>
-                    <div class="tier-title">NIST Monobit Density</div>
-                    <div class="tier-desc">Hamming Weight evaluation (NIST SP 800-22). Discards scalars deviating more
-                        than ±2.25σ (Target range: 110-146 unit bits).</div>
-                </div>
-                <div class="tier-row">
-                    <div class="tier-id">02 / GRAV</div>
-                    <div class="tier-title">Decimal Gravity Factor</div>
-                    <div class="tier-desc">Numerical focusing on range [10^76, 10^77). Concentrates search on the "elite
-                        sector" used by professional Electrum-class wallets.</div>
-                </div>
-                <div class="tier-row">
-                    <div class="tier-id">03 / SPEC</div>
-                    <div class="tier-title">Combinatorial Diversity</div>
-                    <div class="tier-desc">Alphabet diversity audit. Truly random keys with < 9 unique decimal digits
-                            occur at P < 10^-20. Triggers automatic exclusion.</div>
-                    </div>
-                    <div class="tier-row">
-                        <div class="tier-id">04 / RUNS</div>
-                        <div class="tier-title">Serial Pattern Analysis</div>
-                        <div class="tier-desc">Detects anomalous runs of k=7 identical digits (e.g., "0000000"). Proves
-                            structural determinism typical of flawed PRNG seeds.</div>
-                    </div>
-                    <div class="tier-row">
-                        <div class="tier-id">05 / SHAN</div>
-                        <div class="tier-title">Shannon Metric (H ≥ 3.10)</div>
-                        <div class="tier-desc">Ultimate audit of symbol unpredictability. Values below 3.10 represent
-                            terminal data degradation, flagged for Forensic API Probing.</div>
-                    </div>
-                    <div class="tier-row">
-                        <div class="tier-id">06 / LONE</div>
-                        <div class="tier-title">Binary Longest Run</div>
-                        <div class="tier-desc">Detection of bit-sticking (NIST SP 800-22). Block-runs of 17+ identical
-                            bits mark hardware RNG bias and Sequential Entropy Collapse.</div>
-                    </div>
-                    <div class="tier-row">
-                        <div class="tier-id">07 / CYCL</div>
-                        <div class="tier-title">Hexadecimal Cyclicity</div>
-                        <div class="tier-desc">Identifies repetitive nibble loops. Prevents memory alignment artifacts
-                            (Memory Padding) from entering the validation pipeline.</div>
-                    </div>
-                    <div class="tier-row">
-                        <div class="tier-id">08 / COUP</div>
-                        <div class="tier-title">Coupon Collector Nibbles</div>
-                        <div class="tier-desc">Spectral HEX alphabet audit. Discards keys with narrow-spectral bias
-                            (missing 4+ nibbles from the 16-hex set).</div>
-                    </div>
-                    <div class="tier-row">
-                        <div class="tier-id">09 / BYTE</div>
-                        <div class="tier-title">AIS 31 Byte Diversity</div>
-                        <div class="tier-desc">Final sparsity check. Requires minimum 20 unique values per 32-byte
-                            representation. Eliminates "mathematical corpses" instantly.</div>
-                    </div>
-                </div>
-            </div>
-    </section>
-
-    <section id="gpu">
-        <div class="container">
-            <div class="tech-box">
-                <div class="tech-text">
-                    <h2 class="gradient-text" style="font-size: 3rem;">"Random Bites" Strategy</h2>
-                    <p>Linear scanning in 2^256 is futile. bitResurrector uses a stochastic search geometry on the
-                        NVIDIA CUDA platform.</p>
-
-                    <ul style="color: var(--text-secondary); padding: 0; list-style: none;">
-                        <li style="margin-bottom: 20px;"><strong>Stochastic Jumps:</strong> The GPU selects a random
-                            coordinate and initiates a localized "excavation" of 2^32 keys over 45 seconds.</li>
-                        <li style="margin-bottom: 20px;"><strong>Thermal Duty Cycle (45/15):</strong> Optimized
-                            thermodynamic management for long-term GPU health, alternating high-intensity phases with
-                            cooling intervals.</li>
-                        <li><strong>Entropy Segregation:</strong> High-entropy targets are checked offline (Sniper
-                            Mode), while anomalous "disturbed" keys are routed to the API Global module for
-                            micro-balance verification.</li>
-                    </ul>
-                </div>
-                <div class="tech-visual">
-                    <img src="https://ai-seedfinder.com/wp-content/uploads/turbo_mode_comic_panel_1769365906700.jpg"
-                        alt="GPU Acceleration" class="tech-image">
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <section id="operational" style="background: rgba(16,185,129,0.02);">
-        <div class="container">
-            <div class="grid-3">
-                <div class="glass-card">
-                    <h3>Sniper Mode</h3>
-                    <p>Pinnacle of autonomy and performance. High-speed offline scanning of an infinite key space using
-                        local Bloom filters 직접 RAM-에서.</p>
-                </div>
-                <div class="glass-card">
-                    <h3>API Global Mode</h3>
-                    <p>Precision real-time verification via distributed node clusters. Confirms assets on dubious or
-                        newly active SegWit and Taproot addresses.</p>
-                </div>
-                <div class="glass-card">
-                    <h3>Zombie Recovery</h3>
-                    <p>Targeted analysis of "digital graves"—addresses containing up to 4 million BTC that have shown no
-                        activity since the Nakamoto era.</p>
-                </div>
-            </div>
-
-            <div class="glass-card" style="margin-top: 60px; border-color: var(--accent-crimson);">
-                <h2 style="color: var(--accent-crimson);">Heuristic Detection: Why Antiviruses are Afraid</h2>
-                <p>Modern scanners (Windows Defender) classify professional cryptographic software as "Potentially
-                    Unwanted". This is a <strong>False Positive</strong> caused by:</p>
-                <div
-                    style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; font-size: 0.9rem; color: var(--text-secondary);">
-                    <div>• Optimized assembly inserts mistaken for malware.</div>
-                    <div>• Stealth behaviors interpretations our high-priority scheduling.</div>
-                    <div>• High-entropy generation patterns looking like "suspicious noise".</div>
-                    <div>• Direct memory access (mmap) for ultra-fast verification.</div>
-                </div>
-                <p style="margin-top: 20px; font-weight: 700;">Instruction: Add the program directory to Antivirus
-                    EXCLUSIONS to unlock full power.</p>
-            </div>
-        </div>
-    </section>
-
-    <section id="specs">
-        <div class="container">
-            <div class="grid-3">
-                <div>
-                    <h4 style="text-transform: uppercase; color: var(--primary-emerald);">Minimal Baseline</h4>
-                    <p style="font-size: 0.9rem;">The program will launch and search stably:</p>
-                    <ul style="font-size: 0.85rem; color: var(--text-secondary);">
-                        <li>CPU: Intel i3 / Ryzen 3</li>
-                        <li>RAM: 4 GB DDR3+</li>
-                        <li>GPU: Integrated Graphics (OpenCL)</li>
-                        <li>OS: Windows 7/8/10/11 (64-bit)</li>
-                    </ul>
-                </div>
-                <div>
-                    <h4 style="text-transform: uppercase; color: var(--secondary-cyan);">Professional Spec</h4>
-                    <p style="font-size: 0.9rem;">For high-performance industrial search:</p>
-                    <ul style="font-size: 0.85rem; color: var(--text-secondary);">
-                        <li>CPU: Intel i7 / Ryzen 7 (AVX-512)</li>
-                        <li>RAM: 8 GB - 16 GB DDR4/5</li>
-                        <li>GPU: NVIDIA RTX 2060 / 3080 / 4090 (CUDA)</li>
-                        <li>Storage: NVMe SSD (Fast Bloom Index Loading)</li>
-                    </ul>
-                </div>
-                <div style="text-align: center;">
-                    <a href="https://sourceforge.net/projects/bitresurrector/" class="btn btn-primary">Download
-                        Suite</a>
-                </div>
-            </div>
-        </div>
-    </section>
-
     <footer>
-        <div class="container footer-grid">
-            <div>
-                <div class="footer-logo">BIT<span>RESURRECTOR</span></div>
-                <p style="color: var(--text-secondary); font-size: 0.9rem;">Forged in the fires of low-level
-                    optimization. Reclaiming the past for the global future of financial sovereignity.</p>
+        <div class="footer-content">
+            <div class="footer-grid reveal">
+                <div class="footer-brand">
+                    <div class="footer-signature" style="font-size: 0.85rem;">
+                        <div
+                            style="color: #fff; margin-bottom: 10px; font-size: 1.2rem; font-family: var(--font-heading); letter-spacing: 1px; text-transform: uppercase;">
+                            Thomas Bennett</div>
+                        <div style="color: #aaa; margin-bottom: 10px; font-weight: 500;">Lead Developer — London, United
+                            Kingdom</div>
+                        <div style="color: #666; font-style: italic; line-height: 1.6; max-width: 350px;">
+                            Independent Software Engineer with 14+ years of experience in high-performance C++ and
+                            blockchain systems.
+                        </div>
+                    </div>
+                </div>
+                <div class="footer-col">
+                    <h5>Documentation</h5>
+                    <ul class="footer-links">
+                        <li><a href="https://github.com/leadzevs/bitResurrector/blob/main/WHITE_PAPER.md">Technical
+                                White Paper</a></li>
+                        <li><a href="https://github.com/leadzevs/bitResurrector/blob/main/README.md">User Manual
+                                (README)</a></li>
+                        <li><a href="https://github.com/leadzevs/bitResurrector/releases">Official Releases</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h5>Support & Contact</h5>
+                    <ul class="footer-links">
+                        <li><a href="https://t.me/bitResurrector_DEVTeam">Telegram</a></li>
+                        <li><a href="tel:+447380165155">Phone</a></li>
+                        <li><a href="https://ai-seedfinder.com/bitresurrector">Product Overview</a></li>
+                    </ul>
+                </div>
             </div>
-            <div class="footer-links">
-                <h4>Ecosystem</h4>
-                <ul>
-                    <li><a href="https://ai-seedfinder.com/bitresurrector">Official Hub</a></li>
-                    <li><a href="https://github.com/leadzevs/bitResurrector/">GitHub Repository</a></li>
-                    <li><a href="https://sourceforge.net/projects/bitresurrector/">SourceForge mirror</a></li>
-                    <li><a href="https://t.me/aiseedfinder">Recovery Telegram</a></li>
-                </ul>
+
+            <div class="footer-bottom">
+                <div class="footer-credits" id="copyright-text" style="width: 100%; text-align: center;">
+                    © 2023 – <span id="current-year"></span> bitResurrector
+                </div>
             </div>
-            <div class="footer-links">
-                <h4>Technologies</h4>
-                <ul>
-                    <li><a href="#engine">Sniper Engine v3.37</a></li>
-                    <li><a href="#sieve">Entropy Matrix</a></li>
-                    <li><a href="#gpu">CUDA Accelerator</a></li>
-                    <li><a href="https://ai-seedfinder.com/mainpage.html">AI Seed Phrase Finder</a></li>
-                </ul>
-            </div>
-        </div>
-        <div class="container copyright">
-            © 2026 bitResurrector Technical Team & Forensic Cryptography Laboratory.
-            <br>The "Zombie Coins" are not gone—the distance to them is merely a function of your hardware and our code.
         </div>
     </footer>
 
+    <button id="scrollTop">▲</button>
+
+    <div id="infoModal" class="modal">
+        <div class="modal-content">
+            <span class="close-modal" id="closeModal">&times;</span>
+            <div class="modal-body" id="modalBody">
+                <!-- Data injected by JS -->
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Modal Content Data
+        const modalData = {
+            sniper: {
+                tag: "High-Speed Intelligence",
+                title: "Sniper Protocol",
+                img: "assets/img/scene_2_technical_filtration_final_draft_1770128389047.png",
+                desc: "The ultimate tool for mass-scale blockchain revision. Sniper mode is designed for those who value raw computational dominance. By eliminating the latency of external queries, it transforms your hardware into an autonomous scanning node. It doesn't ask for permission; it methodically checks the digital void for any signs of forgotten wealth. With the Sniper Engine v3.37 at its core, this mode ensures that every clock cycle of your CPU/GPU is dedicated to one goal: finding the collision that changes everything.",
+                features: ["Zero-latency local verification", "100% Offline performance", "AVX-512 & CUDA optimization", "Continuous 24/7 standalone audit"]
+            },
+            api: {
+                tag: "Real-time Verification",
+                title: "API Global",
+                img: "assets/img/scene_2_technical_filtration_final_draft_1770128389047.png",
+                desc: "Precision engineering for the modern blockchain landscape. The API Global is your 'eye in the sky,' providing real-time verification across distributed node clusters. This mode is essential for identifying assets in legacy, P2SH, and Native SegWit structures. While others search blindly, API Global provides the surgical accuracy needed to confirm balances on the fly with 0% false negatives. It is the perfect balance between high-speed search and absolute data integrity.",
+                features: ["Live blockchain cross-referencing", "4 core address types support", "Legacy (C/U), P2SH, Bech32", "Guaranteed balance relevance"]
+            },
+            puzzle: {
+                tag: "Elite Treasure Hunting",
+                title: "Bitcoin Puzzle Solver",
+                img: "assets/img/scene_2_technical_filtration_final_draft_1770128389047.png",
+                desc: "Claim the legendary bounties that the world has deemed untouchable. The Bitcoin Puzzle Solver is a specialized automated hunter designed to crack the famous 'Puzzle Transactions' (71-bit, 130-bit, and others) that hold hunreds of BTC in plain sight. This mode requires zero manual setup: the program automatically identifies the world's most valuable unsolved challenges and focuses its entire computational power on the specific mathematical regions where these keys are hidden. You aren't just brute-forcing; you are participating in the most sophisticated digital gold hunt in history.",
+                features: ["Automated Puzzle 71+ detection", "Zero-configuration range targeting", "Bounty-focused scanning logic", "High-priority scalar auditing"]
+            }
+        };
+
+        const modal = document.getElementById('infoModal');
+        const modalBody = document.getElementById('modalBody');
+        const closeBtn = document.getElementById('closeModal');
+
+        function openModal(type) {
+            const data = modalData[type];
+            modalBody.innerHTML = `
+                <div class="modal-tag">${data.tag}</div>
+                <h2>${data.title}</h2>
+                <p>${data.desc}</p>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 20px;">
+                    ${data.features.map(f => `<div style="color: var(--accent); font-size: 0.9rem;">• ${f}</div>`).join('')}
+                </div>
+            `;
+            modal.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        closeBtn.onclick = () => {
+            modal.classList.remove('active');
+            document.body.style.overflow = 'auto';
+        };
+
+        window.onclick = (e) => {
+            if (e.target == modal) {
+                modal.classList.remove('active');
+                document.body.style.overflow = 'auto';
+            }
+        };
+
+        // Assigning clicks to cards
+        document.addEventListener('DOMContentLoaded', () => {
+            const cards = document.querySelectorAll('#targeting .card');
+            if (cards.length >= 4) {
+                // index 0 is the description card, indices 1-3 are the clickable mode cards
+                cards[1].onclick = () => openModal('sniper');
+                cards[2].onclick = () => openModal('api');
+                cards[3].onclick = () => openModal('puzzle');
+
+                cards[1].style.cursor = 'pointer';
+                cards[2].style.cursor = 'pointer';
+                cards[3].style.cursor = 'pointer';
+            }
+        });
+
+        // --- Canvas Particles ---
+        const canvas = document.getElementById('hero-canvas');
+        if (canvas) {
+            const ctx = canvas.getContext('2d');
+            let particles = [];
+            const particleCount = 40;
+
+            function resize() {
+                canvas.width = window.innerWidth;
+                canvas.height = window.innerHeight;
+            }
+
+            class Particle {
+                constructor() {
+                    this.init();
+                }
+                init() {
+                    this.x = Math.random() * canvas.width;
+                    this.y = Math.random() * canvas.height;
+                    this.size = Math.random() * 1.5;
+                    this.speedX = (Math.random() - 0.5) * 0.5;
+                    this.speedY = (Math.random() - 0.5) * 0.5;
+                    this.opacity = Math.random() * 0.5;
+                }
+                update() {
+                    this.x += this.speedX;
+                    this.y += this.speedY;
+                    if (this.x < 0 || this.x > canvas.width) this.speedX *= -1;
+                    if (this.y < 0 || this.y > canvas.height) this.speedY *= -1;
+                }
+                draw() {
+                    ctx.fillStyle = `rgba(0, 255, 136, ${this.opacity})`;
+                    ctx.beginPath();
+                    ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                    ctx.fill();
+                }
+            }
+
+            function animate() {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                particles.forEach(p => {
+                    p.update();
+                    p.draw();
+                });
+                requestAnimationFrame(animate);
+            }
+
+            window.addEventListener('resize', resize);
+            resize();
+            for (let i = 0; i < particleCount; i++) particles.push(new Particle());
+            animate();
+        }
+
+        // --- Scramble Text Effect ---
+        function scrambleText(element) {
+            const finalValue = element.getAttribute('data-value');
+            const characters = '0123456789ABCDEF<>/_'; // Только релевантные символы
+            let iteration = 0;
+
+            // Фиксируем текущий текст в span-структуру для стабильности
+            element.innerHTML = finalValue.split('').map(char => `<span class="scramble-span">${char}</span>`).join('');
+            const spans = element.querySelectorAll('.scramble-span');
+
+            const interval = setInterval(() => {
+                spans.forEach((span, index) => {
+                    if (index < iteration) {
+                        span.innerText = finalValue[index];
+                        span.style.opacity = '1';
+                    } else {
+                        span.innerText = characters[Math.floor(Math.random() * characters.length)];
+                        span.style.opacity = '0.4';
+                    }
+                });
+
+                if (iteration >= finalValue.length) {
+                    clearInterval(interval);
+                }
+                iteration += 1 / 3;
+            }, 40);
+        }
+
+        window.addEventListener('load', () => {
+            scrambleText(document.querySelector('.scramble'));
+        });
+
+        // --- Scroll Progress ---
+        window.addEventListener('scroll', () => {
+            const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+            const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+            const scrolled = (winScroll / height) * 100;
+            document.getElementById('scroll-progress').style.width = scrolled + '%';
+        });
+
+        // --- Spotlight Effect ---
+        const glow = document.getElementById('cursor-glow');
+        document.addEventListener('mousemove', e => {
+            const x = (e.clientX / window.innerWidth) * 100;
+            const y = (e.clientY / window.innerHeight) * 100;
+            glow.style.setProperty('--mouse-x', x + '%');
+            glow.style.setProperty('--mouse-y', y + '%');
+        });
+
+        // --- Sieve Toggle ---
+        const sieveItems = document.querySelectorAll('.sieve-item');
+        sieveItems.forEach(item => {
+            item.onclick = (e) => {
+                // BUG FIX: Change .active to .expanded to avoid conflict with .reveal.active
+                item.classList.toggle('expanded');
+            };
+        });
+
+        // --- Tilt Cards ---
+        const cards = document.querySelectorAll('.card, .sieve-item');
+        cards.forEach(card => {
+            card.addEventListener('mousemove', e => {
+                const rect = card.getBoundingClientRect();
+                const x = e.clientX - rect.left;
+                const y = e.clientY - rect.top;
+                const centerX = rect.width / 2;
+                const centerY = rect.height / 2;
+                const rotateX = (y - centerY) / 20;
+                const rotateY = (centerX - x) / 20;
+                card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale(1.03) translateZ(30px)`;
+            });
+            card.addEventListener('mouseleave', () => {
+                card.style.transform = `perspective(1000px) rotateX(0deg) rotateY(0deg) scale(1) translateZ(0)`;
+            });
+        });
+
+        // --- Scroll Reveal ---
+        const reveals = document.querySelectorAll('.reveal');
+        const revealLoop = () => {
+            const windowHeight = window.innerHeight;
+            reveals.forEach(el => {
+                const rect = el.getBoundingClientRect();
+                if (rect.top < windowHeight - 100) {
+                    el.classList.add('active');
+                }
+            });
+        };
+        window.addEventListener('scroll', revealLoop);
+        window.onload = revealLoop;
+
+        // --- Scroll Top ---
+        const scrollBtn = document.getElementById('scrollTop');
+        window.onscroll = () => {
+            if (window.pageYOffset > 500) scrollBtn.classList.add('visible');
+            else scrollBtn.classList.remove('visible');
+        };
+        scrollBtn.onclick = () => {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        };
+
+        // --- Smooth Anchor ---
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.onclick = function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) target.scrollIntoView({ behavior: 'smooth' });
+            };
+        });
+
+        // --- Mobile Menu ---
+        const menuToggle = document.querySelector('.menu-toggle');
+        const navLinks = document.querySelector('.nav-links');
+
+        menuToggle.onclick = () => {
+            navLinks.classList.toggle('active');
+            const spans = menuToggle.querySelectorAll('span');
+            spans[0].style.transform = navLinks.classList.contains('active') ? 'rotate(45deg) translate(5px, 6px)' : 'none';
+            spans[1].style.opacity = navLinks.classList.contains('active') ? '0' : '1';
+            spans[2].style.transform = navLinks.classList.contains('active') ? 'rotate(-45deg) translate(5px, -6px)' : 'none';
+        };
+
+        // Close menu on link click
+        document.querySelectorAll('.nav-links a').forEach(link => {
+            link.onclick = () => {
+                navLinks.classList.remove('active');
+                const spans = menuToggle.querySelectorAll('span');
+                spans[0].style.transform = 'none';
+                spans[1].style.opacity = '1';
+                spans[2].style.transform = 'none';
+            };
+        });
+
+        // --- Copyright Year Automator ---
+        document.getElementById('current-year').textContent = new Date().getFullYear();
+    </script>
 </body>
 
 </html>
