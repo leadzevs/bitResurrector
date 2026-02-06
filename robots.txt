@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://leadzevs.github.io/bitresurrector/sitemap.xml
+Sitemap: https://leadzevs.github.io/bitResurrector/sitemap.xml
