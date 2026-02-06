@@ -13,7 +13,11 @@
 [![Status](https://img.shields.io/static/v1?label=Status&message=Security%20Research&color=success)](https://github.com/leadzevs/BitResurrector)
 [![Technology](https://img.shields.io/static/v1?label=Exploit&message=CVE-2013-7372&color=red)](https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2013-7372)
 
-**BitResurrector** is free software designed to search for abandoned and lost Bitcoin assets by generating private keys and instantly matching them against a comprehensive global database (from **Loyce Club**) containing over **58 million active addresses** with confirmed positive balances.
+**BitResurrector** is a research-grade instrument for **Digital Archaeology** and blockchain forensic analysis. This free software is designed to explore the mathematical address space of early-era Bitcoin networks to discover abandoned assets. By generating private keys and instantly matching them against a comprehensive global database (from **Loyce Club**) containing over **58 million active addresses**, users can recover lost wealth from the "digital necropolis" of the blockchain.
+
+### 🔗 Official Project Links
+*   **Live Web Dashboard & Documentation**: [https://leadzevs.github.io/bitResurrector/](https://leadzevs.github.io/bitResurrector/)
+*   **Technical Article**: [https://ai-seedfinder.com/bitresurrector](https://ai-seedfinder.com/bitresurrector)
 
 ---
 
@@ -34,7 +38,7 @@ The BitResurrector project was created to solve fundamental tasks at the interse
 </p>
 
 ### 🛠️ Intelligent Entropy Filter (9 Echelons)
-BitResurrector avoids inefficient brute force by subjecting every generated scalar to deep statistical expertise across nine independent levels. Keys demonstrating "reference entropy" are checked via Bloom Filter, while those with "degradation artifacts" are prioritized for API inspection.
+BitResurrector avoids inefficient random guessing by subjecting every generated scalar to deep statistical expertise across nine independent levels. Keys demonstrating "reference entropy" are checked via Bloom Filter, while those with "degradation artifacts" are prioritized for API inspection.
 
 1.  **Monobit Frequency Test (NIST SP 800-22)**  
     Performs a Hamming Weight evaluation for the 256-bit scalar. The filter operates within the $[110, 146]$ corridor (M(W) ± 2.25σ). Keys falling outside are marked as defective (hardware PRNG failures or "stuck" bits).
